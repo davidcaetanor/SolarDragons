@@ -1,6 +1,6 @@
 # DragonsCode Solar
 
-**Projeto TCM - Simulador de Economia com Energia Solar Residencial**  
+**Projeto TCM - Simulador de Economia com Energia Solar**  
 Professor Orientador: Túlio Cearamicoli Vivaldini
 
 ## Sobre o Projeto
