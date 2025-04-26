@@ -13,7 +13,7 @@ Este sistema simula a economia gerada pelo uso de energia solar em residências.
 - Cálculo de economia com energia solar
 - Interface gráfica em Java (Swing)
 - Armazenamento em banco de dados MySQL
-- Uso do MySQL Workbench para gerenciamento
+- MySQL Workbench para gerenciamento
 
 ## Tecnologias Utilizadas
 
