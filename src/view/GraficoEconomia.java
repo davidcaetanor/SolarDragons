@@ -4,12 +4,14 @@ import model.Cliente;
 import model.SimulacaoEnergia;
 import org.knowm.xchart.CategoryChart;
 import org.knowm.xchart.CategoryChartBuilder;
-import org.knowm.xchart.SwingWrapper;
 import org.knowm.xchart.XChartPanel;
+import org.knowm.xchart.style.CategoryStyler;
+import org.knowm.xchart.style.Styler;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.List;
+import java.util.Locale;
 import java.util.stream.Collectors;
 
 public class GraficoEconomia {
@@ -19,43 +21,53 @@ public class GraficoEconomia {
                 .filter(c -> c.getSimulacao() != null)
                 .toList();
 
-        if (comSimulacao.isEmpty()) {
-            JOptionPane.showMessageDialog(null, "Nenhum cliente com simulação disponível para gráfico.");
-            return;
-        }
-
-        List<String> nomes = comSimulacao.stream()
-                .map(Cliente::getNome)
+        List<String> perfis = comSimulacao.stream()
+                .map(c -> "R$ " + (int) c.getSimulacao().getValorContaReais())
                 .collect(Collectors.toList());
 
-        List<Double> economias10Anos = comSimulacao.stream()
-                .map(c -> c.getSimulacao().getEconomiaAnual() * 10)
+        List<Double> economia5Anos = comSimulacao.stream()
+                .map(c -> c.getSimulacao().getEconomiaAnual() * 5)
                 .collect(Collectors.toList());
 
-        List<Double> investimentos = comSimulacao.stream()
+        List<Double> investimentoInicial = comSimulacao.stream()
                 .map(c -> c.getSimulacao().getCustoSistema())
                 .collect(Collectors.toList());
 
         CategoryChart chart = new CategoryChartBuilder()
-                .width(800)
+                .width(900)
                 .height(600)
-                .title("Economia em 10 Anos vs Investimento Inicial")
-                .xAxisTitle("Cliente")
+                .title("Ganhos com Energia Solar em 5 Anos")
+                .xAxisTitle("Perfil de Conta Mensal")
                 .yAxisTitle("Valor (R$)")
                 .build();
 
-        chart.addSeries("Economia em 10 Anos", nomes, economias10Anos);
-        chart.addSeries("Investimento Inicial", nomes, investimentos);
+        CategoryStyler styler = chart.getStyler();
+        styler.setLegendPosition(Styler.LegendPosition.InsideNE);
+        styler.setYAxisDecimalPattern("'R$' #,##0.00");
+        styler.setLocale(Locale.forLanguageTag("pt-BR"));
+        styler.setAvailableSpaceFill(0.6);
+        styler.setStacked(false);
+        styler.setSeriesColors(new Color[]{
+                new Color(34, 139, 34),
+                new Color(178, 34, 34)
+        });
+        styler.setPlotGridVerticalLinesVisible(false);
+        styler.setPlotGridHorizontalLinesVisible(true);
 
-        JFrame frame = new JFrame("Gráfico - Economia Projetada");
-        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        frame.setLayout(new BorderLayout());
+        chart.addSeries("Economia em 5 Anos", perfis, economia5Anos);
+        chart.addSeries("Investimento Inicial", perfis, investimentoInicial);
 
-        XChartPanel<CategoryChart> chartPanel = new XChartPanel<>(chart);
-        frame.add(chartPanel, BorderLayout.CENTER);
+        SwingUtilities.invokeLater(() -> {
+            JFrame frame = new JFrame("Gráfico - Economia x Investimento");
+            frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+            frame.setLayout(new BorderLayout());
 
-        frame.pack();
-        frame.setLocationRelativeTo(null);
-        frame.setVisible(true);
+            XChartPanel<CategoryChart> chartPanel = new XChartPanel<>(chart);
+            frame.add(chartPanel, BorderLayout.CENTER);
+
+            frame.pack();
+            frame.setLocationRelativeTo(null);
+            frame.setVisible(true);
+        });
     }
 }

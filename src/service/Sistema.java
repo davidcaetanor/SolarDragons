@@ -32,7 +32,15 @@ public class Sistema {
                 case 1 -> gerenciarCadastro();
                 case 2 -> gerenciarSimulacao();
                 case 3 -> buscarCadastro();
-                case 4 -> GraficoEconomia.exibirGraficoEconomia(clientes);
+                case 4 -> {
+                    boolean existeSimulacao = clientes.stream().anyMatch(c -> c.getSimulacao() != null);
+                    if (!existeSimulacao) {
+                        System.out.println("Nenhum cliente possui simulação registrada.");
+                        System.out.println("Acesse a opção 2 para realizar uma simulação antes de visualizar o gráfico.");
+                    } else {
+                        GraficoEconomia.exibirGraficoEconomia(clientes);
+                    }
+                }
                 case 5 -> exportarCSV();
                 case 0 -> System.out.println("Encerrando...");
                 default -> System.out.println("Entrada inválida, insira uma opção entre 0 a 5");
@@ -159,7 +167,6 @@ public class Sistema {
         return null;
     }
 
-
     public String formatarPayback(double anos) {
         if (anos < 0) return "Não aplicável";
 
@@ -172,7 +179,6 @@ public class Sistema {
         return "Retorno de investimento em " + anosInt + (anosInt == 1 ? " ano" : " anos") + " e " + meses + (meses == 1 ? " mês" : " meses");
     }
 
-
     public void exportarCSV() {
         try (PrintWriter writer = new PrintWriter("relatorio-clientes.csv")) {
             writer.println("CPF,Nome,Cidade,Estado,Conta (R$),Potência (kWp),Módulos,Área (m²),Custo (R$),Economia (R$),Payback (anos)");
@@ -180,7 +186,10 @@ public class Sistema {
             for (Cliente c : clientes) {
                 SimulacaoEnergia s = c.getSimulacao();
                 if (s != null) {
-                    writer.printf("%s,%s,%s,%s,%.2f,%.2f,%d,%.2f,%.2f,%.2f,%.2f\n", c.getCpf(), c.getNome(), c.getCidade(), c.getEstado(), s.getValorContaReais(), s.getPotenciaSistemaKw(), s.getQuantidadeModulos(), s.getAreaNecessariaM2(), s.getCustoSistema(), s.getEconomiaAnual(), s.getPaybackAnos());
+                    writer.printf("%s,%s,%s,%s,%.2f,%.2f,%d,%.2f,%.2f,%.2f,%.2f\n",
+                            c.getCpf(), c.getNome(), c.getCidade(), c.getEstado(),
+                            s.getValorContaReais(), s.getPotenciaSistemaKw(), s.getQuantidadeModulos(),
+                            s.getAreaNecessariaM2(), s.getCustoSistema(), s.getEconomiaAnual(), s.getPaybackAnos());
                 }
             }
 

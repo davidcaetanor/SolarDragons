@@ -1,11 +1,11 @@
 package model;
 
 public class Endereco {
-    private String cep;
-    private String logradouro;
-    private String bairro;
-    private String cidade;
-    private String estado;
+    private final String cep;
+    private final String logradouro;
+    private final String bairro;
+    private final String cidade;
+    private final String estado;
 
     public Endereco(String cep, String logradouro, String bairro, String cidade, String estado) {
         this.cep = cep;

@@ -15,7 +15,7 @@ public class Cliente {
         this.nome = nome;
     }
 
-    // Getters e setters
+
     public String getNome() {
         return nome != null ? nome : "";
     }
@@ -64,19 +64,19 @@ public class Cliente {
         this.estado = estado;
     }
 
-    public SimulacaoEnergia getSimulacao() {
-        return simulacao;
-    }
-
-    public void setSimulacao(SimulacaoEnergia simulacao) {
-        this.simulacao = simulacao;
-    }
-
     public String getNumero() {
         return numero != null ? numero : "";
     }
 
     public void setNumero(String numero) {
         this.numero = numero;
+    }
+
+    public SimulacaoEnergia getSimulacao() {
+        return simulacao;
+    }
+
+    public void setSimulacao(SimulacaoEnergia simulacao) {
+        this.simulacao = simulacao;
     }
 }
