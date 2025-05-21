@@ -1,3 +1,4 @@
+
 package model;
 
 import java.util.HashMap;
@@ -8,6 +9,7 @@ public class SimulacaoEnergia {
     private final double tarifa;
     private final double consumoEstimadoKwh;
     private final double geracaoEstimadaKwh;
+    private final double economiaMensal;
     private final double economiaAnual;
     private final double potenciaSistemaKw;
     private final int quantidadeModulos;
@@ -36,7 +38,8 @@ public class SimulacaoEnergia {
         this.custoSistema = potenciaSistemaKw * custoPorKw;
 
         double fatorRealidade = 0.75;
-        this.economiaAnual = geracaoEstimadaKwh * tarifa * 12 * fatorRealidade;
+        this.economiaMensal = geracaoEstimadaKwh * tarifa * fatorRealidade;
+        this.economiaAnual = economiaMensal * 12;
     }
 
     public double getValorContaReais() {
@@ -53,6 +56,10 @@ public class SimulacaoEnergia {
 
     public double getGeracaoEstimadaKwh() {
         return geracaoEstimadaKwh;
+    }
+
+    public double getEconomiaMensal() {
+        return economiaMensal;
     }
 
     public double getEconomiaAnual() {
@@ -76,6 +83,19 @@ public class SimulacaoEnergia {
     }
 
     public double getPaybackAnos() {
-        return economiaAnual > 0 ? custoSistema / economiaAnual : -1;
+        if (economiaAnual <= 0) return -1;
+
+        double acumulado = 0;
+        int anos = 0;
+        while (acumulado < custoSistema && anos < 50) {
+            acumulado += economiaAnual;
+            anos++;
+        }
+
+
+        double restante = custoSistema - (acumulado - economiaAnual);
+        double meses = restante / (economiaAnual / 12);
+
+        return anos - 1 + (meses / 12);
     }
 }
