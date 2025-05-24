@@ -16,7 +16,7 @@ public class Cliente {
         this.nome = nome;
     }
 
-    
+
     public String getEmail() {
         return email != null ? email : "";
     }
