@@ -65,7 +65,7 @@ public class TelaPrincipalUsuario extends JFrame {
         });
 
         botaoGrafico.addActionListener(e -> {
-            JOptionPane.showMessageDialog(this, "Função em desenvolvimento! Gráfico será implementado em breve.", "Info", JOptionPane.INFORMATION_MESSAGE);
+            GraficoEconomia.exibirGraficoEconomia();
         });
 
         botaoExportar.addActionListener(e -> {
