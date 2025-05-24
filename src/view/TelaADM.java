@@ -3,52 +3,81 @@ package view;
 import service.SessaoUsuario;
 
 import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 public class TelaADM extends JFrame {
 
     public TelaADM() {
         setTitle("Painel Administrativo - SolarDragons");
-        setSize(400, 320);
+        setSize(500, 470);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setLayout(null);
 
         JLabel saudacao = new JLabel("Bem-vindo, ADM: " + SessaoUsuario.getUsuarioLogado().getNome());
-        saudacao.setBounds(60, 20, 300, 30);
+        saudacao.setBounds(60, 20, 380, 30);
+        saudacao.setFont(saudacao.getFont().deriveFont(16f));
         add(saudacao);
 
-        JButton botaoUsuarios = new JButton("Listar Usuários");
-        botaoUsuarios.setBounds(120, 70, 150, 30);
+        JButton botaoUsuarios = new JButton("Gerenciar Usuários");
+        botaoUsuarios.setBounds(140, 70, 200, 35);
         add(botaoUsuarios);
 
-        JButton botaoSimulacoes = new JButton("Ver Simulações");
-        botaoSimulacoes.setBounds(120, 110, 150, 30);
+        JButton botaoClientes = new JButton("Gerenciar Clientes");
+        botaoClientes.setBounds(140, 120, 200, 35);
+        add(botaoClientes);
+
+        JButton botaoSimulacoes = new JButton("Gerenciar Simulações");
+        botaoSimulacoes.setBounds(140, 170, 200, 35);
         add(botaoSimulacoes);
 
-        JButton botaoExportar = new JButton("Exportar Relatório");
-        botaoExportar.setBounds(120, 150, 150, 30);
-        add(botaoExportar);
-
         JButton botaoParametros = new JButton("Parâmetros do Sistema");
-        botaoParametros.setBounds(120, 190, 150, 30);
+        botaoParametros.setBounds(140, 220, 200, 35);
         add(botaoParametros);
 
+        JButton botaoExportar = new JButton("Exportar Relatórios");
+        botaoExportar.setBounds(140, 270, 200, 35);
+        add(botaoExportar);
+
+        JButton botaoEstatisticas = new JButton("Ver Estatísticas Globais");
+        botaoEstatisticas.setBounds(140, 320, 200, 35);
+        add(botaoEstatisticas);
+
         JButton botaoSair = new JButton("Sair");
-        botaoSair.setBounds(120, 230, 150, 30);
+        botaoSair.setBounds(140, 370, 200, 35);
         add(botaoSair);
 
-        botaoSair.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                SessaoUsuario.logout();
-                dispose();
-                new TelaLogin();
-            }
+        botaoUsuarios.addActionListener(e -> {
+            dispose();
+            new TelaGerenciarUsuarios();
         });
 
+        botaoClientes.addActionListener(e -> {
+            dispose();
+            new TelaADMClientes();
+        });
 
+        botaoSimulacoes.addActionListener(e -> {
+            dispose();
+            new TelaADMSimulacoes();
+        });
+
+        botaoParametros.addActionListener(e -> {
+            new TelaParametrosSistema();
+        });
+
+        botaoExportar.addActionListener(e -> {
+            new TelaExportarRelatorios();
+        });
+
+        botaoEstatisticas.addActionListener(e -> {
+            new TelaEstatisticasGlobais();
+        });
+
+        botaoSair.addActionListener(e -> {
+            SessaoUsuario.logout();
+            dispose();
+            new TelaLogin();
+        });
 
         setVisible(true);
     }

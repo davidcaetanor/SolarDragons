@@ -1,6 +1,6 @@
-
 package model;
 
+import service.ParametrosSistema;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -29,58 +29,32 @@ public class SimulacaoEnergia {
         this.valorContaReais = valorContaReais;
         this.tarifa = tarifaPorEstado.getOrDefault(estado.toUpperCase(), 0.90);
         this.consumoEstimadoKwh = valorContaReais / tarifa;
-        this.geracaoEstimadaKwh = consumoEstimadoKwh * 0.95;
+
+
+        double percentualGeracao = ParametrosSistema.getPercentualGeracao();
+        double custoPorKw = ParametrosSistema.getCustoPorKw();
+        double fatorEconomia = ParametrosSistema.getFatorEconomia();
+
+        this.geracaoEstimadaKwh = consumoEstimadoKwh * percentualGeracao;
         this.potenciaSistemaKw = consumoEstimadoKwh / 108.0;
         this.quantidadeModulos = (int) Math.ceil(potenciaSistemaKw / 0.555);
         this.areaNecessariaM2 = quantidadeModulos * 3.375;
 
-        double custoPorKw = 2650.00;
         this.custoSistema = potenciaSistemaKw * custoPorKw;
-
-        double fatorRealidade = 0.75;
-        this.economiaMensal = geracaoEstimadaKwh * tarifa * fatorRealidade;
+        this.economiaMensal = geracaoEstimadaKwh * tarifa * fatorEconomia;
         this.economiaAnual = economiaMensal * 12;
     }
 
-    public double getValorContaReais() {
-        return valorContaReais;
-    }
-
-    public double getTarifa() {
-        return tarifa;
-    }
-
-    public double getConsumoEstimadoKwh() {
-        return consumoEstimadoKwh;
-    }
-
-    public double getGeracaoEstimadaKwh() {
-        return geracaoEstimadaKwh;
-    }
-
-    public double getEconomiaMensal() {
-        return economiaMensal;
-    }
-
-    public double getEconomiaAnual() {
-        return economiaAnual;
-    }
-
-    public double getPotenciaSistemaKw() {
-        return potenciaSistemaKw;
-    }
-
-    public int getQuantidadeModulos() {
-        return quantidadeModulos;
-    }
-
-    public double getAreaNecessariaM2() {
-        return areaNecessariaM2;
-    }
-
-    public double getCustoSistema() {
-        return custoSistema;
-    }
+    public double getValorContaReais() { return valorContaReais; }
+    public double getTarifa() { return tarifa; }
+    public double getConsumoEstimadoKwh() { return consumoEstimadoKwh; }
+    public double getGeracaoEstimadaKwh() { return geracaoEstimadaKwh; }
+    public double getEconomiaMensal() { return economiaMensal; }
+    public double getEconomiaAnual() { return economiaAnual; }
+    public double getPotenciaSistemaKw() { return potenciaSistemaKw; }
+    public int getQuantidadeModulos() { return quantidadeModulos; }
+    public double getAreaNecessariaM2() { return areaNecessariaM2; }
+    public double getCustoSistema() { return custoSistema; }
 
     public double getPaybackAnos() {
         if (economiaAnual <= 0) return -1;
@@ -91,7 +65,6 @@ public class SimulacaoEnergia {
             acumulado += economiaAnual;
             anos++;
         }
-
 
         double restante = custoSistema - (acumulado - economiaAnual);
         double meses = restante / (economiaAnual / 12);

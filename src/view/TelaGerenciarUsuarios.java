@@ -1,0 +1,125 @@
+package view;
+
+import model.Usuario;
+import service.AutenticacaoUser;
+import service.SessaoUsuario;
+
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import java.util.List;
+
+public class TelaGerenciarUsuarios extends JFrame {
+    private JTable tabelaUsuarios;
+    private DefaultTableModel tableModel;
+
+    public TelaGerenciarUsuarios() {
+        setTitle("Gerenciar Usuários");
+        setSize(700, 350);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        setLocationRelativeTo(null);
+        setLayout(null);
+
+        JLabel label = new JLabel("Usuários do sistema:");
+        label.setBounds(20, 15, 200, 25);
+        add(label);
+
+        String[] colunas = {"Nome", "CPF", "Email", "Tipo"};
+        tableModel = new DefaultTableModel(colunas, 0) {
+            public boolean isCellEditable(int row, int column) { return false; }
+        };
+        tabelaUsuarios = new JTable(tableModel);
+        JScrollPane scrollPane = new JScrollPane(tabelaUsuarios);
+        scrollPane.setBounds(20, 45, 640, 180);
+        add(scrollPane);
+
+        JButton botaoPromover = new JButton("Promover/Demitir ADM");
+        botaoPromover.setBounds(20, 240, 170, 30);
+        add(botaoPromover);
+
+        JButton botaoRemover = new JButton("Remover Usuário");
+        botaoRemover.setBounds(200, 240, 150, 30);
+        add(botaoRemover);
+
+        JButton botaoVoltar = new JButton("Voltar");
+        botaoVoltar.setBounds(370, 240, 100, 30);
+        add(botaoVoltar);
+
+        botaoPromover.addActionListener(e -> promoverOuDemitirADM());
+        botaoRemover.addActionListener(e -> removerUsuario());
+        botaoVoltar.addActionListener(e -> {
+            dispose();
+            new TelaADM();
+        });
+
+        atualizarTabela();
+
+        setVisible(true);
+    }
+
+    private void atualizarTabela() {
+        tableModel.setRowCount(0);
+        List<Usuario> usuarios = AutenticacaoUser.listarUsuarios();
+        for (Usuario u : usuarios) {
+            tableModel.addRow(new Object[]{
+                    u.getNome(), u.getCpf(), u.getEmail(),
+                    u.isAdmin() ? "ADM" : "Usuário"
+            });
+        }
+    }
+
+    private void promoverOuDemitirADM() {
+        int linha = tabelaUsuarios.getSelectedRow();
+        if (linha == -1) {
+            JOptionPane.showMessageDialog(this, "Selecione um usuário!", "Aviso", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        String cpf = (String) tableModel.getValueAt(linha, 1);
+        List<Usuario> usuarios = AutenticacaoUser.listarUsuarios();
+        for (Usuario u : usuarios) {
+            if (u.getCpf().equals(cpf)) {
+                if (u.isAdmin()) {
+                    int confirm = JOptionPane.showConfirmDialog(this, "Deseja remover os privilégios de ADM deste usuário?", "Confirmação", JOptionPane.YES_NO_OPTION);
+                    if (confirm == JOptionPane.YES_OPTION) {
+                        u.setAdmin(false);
+                        atualizarTabela();
+                    }
+                } else {
+                    int confirma = JOptionPane.showConfirmDialog(this, "Deseja promover este usuário a ADM?", "Confirmação", JOptionPane.YES_NO_OPTION);
+                    if (confirma == JOptionPane.YES_OPTION) {
+                        u.setAdmin(true);
+                        atualizarTabela();
+                    }
+                }
+                return;
+            }
+        }
+    }
+
+    private void removerUsuario() {
+        int linha = tabelaUsuarios.getSelectedRow();
+        if (linha == -1) {
+            JOptionPane.showMessageDialog(this, "Selecione um usuário para remover!", "Aviso", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        String cpf = (String) tableModel.getValueAt(linha, 1);
+        if (cpf.equals(SessaoUsuario.getUsuarioLogado().getCpf())) {
+            JOptionPane.showMessageDialog(this, "Você não pode remover a si mesmo!", "Erro", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        List<Usuario> usuarios = AutenticacaoUser.listarUsuarios();
+        Usuario paraRemover = null;
+        for (Usuario u : usuarios) {
+            if (u.getCpf().equals(cpf)) {
+                paraRemover = u;
+                break;
+            }
+        }
+        if (paraRemover != null) {
+            int confirm = JOptionPane.showConfirmDialog(this, "Deseja remover este usuário?", "Confirmar Exclusão", JOptionPane.YES_NO_OPTION);
+            if (confirm == JOptionPane.YES_OPTION) {
+                usuarios.remove(paraRemover);
+                atualizarTabela();
+            }
+        }
+    }
+}
