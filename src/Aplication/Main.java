@@ -1,6 +1,5 @@
 package Aplication;
 
-import service.Sistema;
 import view.TelaLogin;
 
 public class Main {
