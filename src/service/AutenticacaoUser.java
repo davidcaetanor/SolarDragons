@@ -34,6 +34,6 @@ public class AutenticacaoUser {
     }
 
     static {
-        usuarios.add(new Usuario("1234567891011", "Adm", "adm@solar.com", "adm123", true));
+        usuarios.add(new Usuario("1234567891011", "ADMINISTRADORDRAGONSSSSXD", "adm@solar.com", "adm123", true));
     }
 }
