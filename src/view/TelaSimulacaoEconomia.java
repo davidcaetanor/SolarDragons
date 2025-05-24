@@ -6,6 +6,7 @@ import service.ServicoCadastroCliente;
 import service.SessaoUsuario;
 
 import javax.swing.*;
+import java.util.List;
 
 public class TelaSimulacaoEconomia extends JFrame {
 
@@ -71,19 +72,42 @@ public class TelaSimulacaoEconomia extends JFrame {
             return;
         }
 
+        String cpfUsuario = SessaoUsuario.getUsuarioLogado().getCpf();
+        List<Cliente> clientes = ServicoCadastroCliente.listarClientesDoUsuario(cpfUsuario);
 
-        String cpf = SessaoUsuario.getUsuarioLogado().getCpf();
-        Cliente cliente = ServicoCadastroCliente.getClientePorCpf(cpf);
+        if (clientes.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Cadastre ao menos um cliente antes de simular.", "Erro", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+
+        String[] opcoes = clientes.stream()
+                .map(c -> c.getNome() + " - " + c.getCpf())
+                .toArray(String[]::new);
+
+        String escolha = (String) JOptionPane.showInputDialog(
+                this,
+                "Escolha o cliente para simular:",
+                "Selecionar Cliente",
+                JOptionPane.QUESTION_MESSAGE,
+                null,
+                opcoes,
+                opcoes[0]
+        );
+
+        if (escolha == null) return;
+
+        String cpfClienteSelecionado = escolha.substring(escolha.lastIndexOf(" - ") + 3).trim();
+        Cliente cliente = ServicoCadastroCliente.buscarClientePorCpfCliente(cpfUsuario, cpfClienteSelecionado);
 
         if (cliente == null || cliente.getEstado().isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Seus dados estão incompletos. Cadastre/atualize seu endereço antes de simular.", "Erro", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Dados do cliente incompletos. Cadastre/atualize o endereço antes de simular.", "Erro", JOptionPane.ERROR_MESSAGE);
             return;
         }
 
         SimulacaoEnergia simulacao = new SimulacaoEnergia(cliente.getEstado(), valorConta);
         cliente.setSimulacao(simulacao);
-        ServicoCadastroCliente.cadastrarOuAtualizarCliente(cliente);
-
+        ServicoCadastroCliente.atualizarCliente(cpfUsuario, cliente);
 
         String resultado = String.format(
                 "Consumo estimado: %.2f kWh/mês\n" +
