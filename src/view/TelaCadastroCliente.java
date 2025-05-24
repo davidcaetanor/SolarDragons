@@ -1,24 +1,21 @@
 package view;
 
 import model.Cliente;
+import model.Endereco;
 import service.ServicoCadastroCliente;
 import service.SessaoUsuario;
+import service.ViaCEP;
+
 import javax.swing.*;
 
 public class TelaCadastroCliente extends JFrame {
 
-    private JTextField campoNome;
-    private JTextField campoLogradouro;
-    private JTextField campoNumero;
-    private JTextField campoBairro;
-    private JTextField campoCidade;
-    private JTextField campoEstado;
-    private JButton botaoSalvar;
-    private JButton botaoCancelar;
+    private JTextField campoNome, campoCpfCliente, campoCep, campoLogradouro, campoNumero, campoBairro, campoCidade, campoEstado;
+    private JButton botaoBuscarCep, botaoSalvar, botaoCancelar;
 
     public TelaCadastroCliente() {
         setTitle("Cadastro de Cliente");
-        setSize(420, 380);
+        setSize(480, 420);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
         setLayout(null);
@@ -26,89 +23,116 @@ public class TelaCadastroCliente extends JFrame {
         JLabel labelNome = new JLabel("Nome:");
         labelNome.setBounds(30, 30, 100, 25);
         add(labelNome);
-
         campoNome = new JTextField();
-        campoNome.setBounds(140, 30, 220, 25);
+        campoNome.setBounds(140, 30, 280, 25);
         add(campoNome);
 
-        JLabel labelLogradouro = new JLabel("Logradouro:");
-        labelLogradouro.setBounds(30, 70, 100, 25);
-        add(labelLogradouro);
+        JLabel labelCpfCliente = new JLabel("CPF do Cliente:");
+        labelCpfCliente.setBounds(30, 70, 100, 25);
+        add(labelCpfCliente);
+        campoCpfCliente = new JTextField();
+        campoCpfCliente.setBounds(140, 70, 180, 25);
+        add(campoCpfCliente);
 
+        JLabel labelCep = new JLabel("CEP:");
+        labelCep.setBounds(30, 110, 100, 25);
+        add(labelCep);
+        campoCep = new JTextField();
+        campoCep.setBounds(140, 110, 90, 25);
+        add(campoCep);
+
+        botaoBuscarCep = new JButton("Buscar CEP");
+        botaoBuscarCep.setBounds(240, 110, 120, 25);
+        add(botaoBuscarCep);
+
+        JLabel labelLogradouro = new JLabel("Logradouro:");
+        labelLogradouro.setBounds(30, 150, 100, 25);
+        add(labelLogradouro);
         campoLogradouro = new JTextField();
-        campoLogradouro.setBounds(140, 70, 220, 25);
+        campoLogradouro.setBounds(140, 150, 280, 25);
         add(campoLogradouro);
 
         JLabel labelNumero = new JLabel("Número:");
-        labelNumero.setBounds(30, 110, 100, 25);
+        labelNumero.setBounds(30, 190, 100, 25);
         add(labelNumero);
-
         campoNumero = new JTextField();
-        campoNumero.setBounds(140, 110, 220, 25);
+        campoNumero.setBounds(140, 190, 90, 25);
         add(campoNumero);
 
         JLabel labelBairro = new JLabel("Bairro:");
-        labelBairro.setBounds(30, 150, 100, 25);
+        labelBairro.setBounds(30, 230, 100, 25);
         add(labelBairro);
-
         campoBairro = new JTextField();
-        campoBairro.setBounds(140, 150, 220, 25);
+        campoBairro.setBounds(140, 230, 180, 25);
         add(campoBairro);
 
         JLabel labelCidade = new JLabel("Cidade:");
-        labelCidade.setBounds(30, 190, 100, 25);
+        labelCidade.setBounds(30, 270, 100, 25);
         add(labelCidade);
-
         campoCidade = new JTextField();
-        campoCidade.setBounds(140, 190, 220, 25);
+        campoCidade.setBounds(140, 270, 180, 25);
         add(campoCidade);
 
         JLabel labelEstado = new JLabel("Estado (UF):");
-        labelEstado.setBounds(30, 230, 100, 25);
+        labelEstado.setBounds(30, 310, 100, 25);
         add(labelEstado);
-
         campoEstado = new JTextField();
-        campoEstado.setBounds(140, 230, 50, 25);
+        campoEstado.setBounds(140, 310, 50, 25);
         add(campoEstado);
 
         botaoSalvar = new JButton("Salvar");
-        botaoSalvar.setBounds(90, 280, 100, 35);
+        botaoSalvar.setBounds(100, 350, 100, 35);
         add(botaoSalvar);
 
         botaoCancelar = new JButton("Cancelar");
-        botaoCancelar.setBounds(210, 280, 100, 35);
+        botaoCancelar.setBounds(220, 350, 100, 35);
         add(botaoCancelar);
 
 
-        carregarDadosCliente();
+        botaoBuscarCep.addActionListener(e -> buscarCep());
 
         botaoSalvar.addActionListener(e -> salvarCliente());
         botaoCancelar.addActionListener(e -> {
             dispose();
-
+            new TelaPrincipalUsuario();
         });
 
         setVisible(true);
     }
 
-    private void carregarDadosCliente() {
-        String cpf = SessaoUsuario.getUsuarioLogado().getCpf();
-        Cliente cliente = service.ServicoCadastroCliente.getClientePorCpf(cpf);
-        if (cliente != null) {
-            campoNome.setText(cliente.getNome());
-            campoLogradouro.setText(cliente.getLogradouro());
-            campoNumero.setText(cliente.getNumero());
-            campoBairro.setText(cliente.getBairro());
-            campoCidade.setText(cliente.getCidade());
-            campoEstado.setText(cliente.getEstado());
-        } else {
-            campoNome.setText(SessaoUsuario.getUsuarioLogado().getNome());
+    private void buscarCep() {
+        String cep = campoCep.getText().trim();
+        if (cep.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Digite o CEP!", "Atenção", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        try {
+            Endereco endereco = ViaCEP.buscarEnderecoPorCEP(cep);
+
+            campoLogradouro.setText(endereco.getLogradouro());
+            campoBairro.setText(endereco.getBairro());
+            campoCidade.setText(endereco.getCidade());
+            campoEstado.setText(endereco.getEstado());
+
+
+            campoLogradouro.setEditable(endereco.getLogradouro().isEmpty());
+            campoBairro.setEditable(endereco.getBairro().isEmpty());
+            campoCidade.setEditable(endereco.getCidade().isEmpty());
+            campoEstado.setEditable(endereco.getEstado().isEmpty());
+
+            if (endereco.getLogradouro().isEmpty() || endereco.getBairro().isEmpty()
+                    || endereco.getCidade().isEmpty() || endereco.getEstado().isEmpty()) {
+                JOptionPane.showMessageDialog(this, "CEP encontrado, mas alguns campos não foram preenchidos. Complete manualmente!", "Aviso", JOptionPane.INFORMATION_MESSAGE);
+            }
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this, "Erro ao buscar CEP: " + ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
         }
     }
 
     private void salvarCliente() {
-        String cpf = SessaoUsuario.getUsuarioLogado().getCpf();
         String nome = campoNome.getText().trim();
+        String cpfCliente = campoCpfCliente.getText().trim();
+        String cep = campoCep.getText().trim();
         String logradouro = campoLogradouro.getText().trim();
         String numero = campoNumero.getText().trim();
         String bairro = campoBairro.getText().trim();
@@ -116,32 +140,29 @@ public class TelaCadastroCliente extends JFrame {
         String estado = campoEstado.getText().trim().toUpperCase();
 
 
-        if (nome.isEmpty() || logradouro.isEmpty() || numero.isEmpty() ||
-                bairro.isEmpty() || cidade.isEmpty() || estado.isEmpty()) {
+        if (nome.isEmpty() || cpfCliente.isEmpty() || cep.isEmpty() || logradouro.isEmpty() ||
+                numero.isEmpty() || bairro.isEmpty() || cidade.isEmpty() || estado.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Preencha todos os campos!", "Erro", JOptionPane.ERROR_MESSAGE);
             return;
         }
-
         if (estado.length() != 2) {
             JOptionPane.showMessageDialog(this, "Informe o estado com 2 letras (UF)", "Erro", JOptionPane.ERROR_MESSAGE);
             return;
         }
 
-        Cliente cliente = new Cliente(cpf, nome);
+        Cliente cliente = new Cliente(cpfCliente, nome);
         cliente.setLogradouro(logradouro);
         cliente.setNumero(numero);
         cliente.setBairro(bairro);
         cliente.setCidade(cidade);
         cliente.setEstado(estado);
 
-        boolean sucesso = service.ServicoCadastroCliente.cadastrarOuAtualizarCliente(cliente);
 
-        if (sucesso) {
-            JOptionPane.showMessageDialog(this, "Dados salvos com sucesso!");
-            dispose();
+        String cpfUsuario = SessaoUsuario.getUsuarioLogado().getCpf();
+        ServicoCadastroCliente.adicionarCliente(cpfUsuario, cliente);
 
-        } else {
-            JOptionPane.showMessageDialog(this, "Erro ao salvar os dados.", "Erro", JOptionPane.ERROR_MESSAGE);
-        }
+        JOptionPane.showMessageDialog(this, "Cliente cadastrado com sucesso!");
+        dispose();
+        new TelaPrincipalUsuario();
     }
 }

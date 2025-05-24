@@ -1,10 +1,9 @@
 package view;
 
 import service.SessaoUsuario;
+import service.ServicoCadastroCliente;
 
 import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 public class TelaPrincipalUsuario extends JFrame {
 
@@ -39,15 +38,43 @@ public class TelaPrincipalUsuario extends JFrame {
         botaoSair.setBounds(120, 230, 150, 30);
         add(botaoSair);
 
-        botaoSair.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                SessaoUsuario.logout();
+
+        botaoSimular.addActionListener(e -> {
+            String cpf = SessaoUsuario.getUsuarioLogado().getCpf();
+            if (!ServicoCadastroCliente.clienteExiste(cpf)) {
+                JOptionPane.showMessageDialog(this, "Você precisa cadastrar seus dados antes de simular!", "Atenção", JOptionPane.WARNING_MESSAGE);
                 dispose();
-                new TelaLogin();
+                new TelaCadastroCliente();
+            } else {
+                dispose();
+                new TelaSimulacaoEconomia();
             }
         });
 
+
+        botaoVerDados.addActionListener(e -> {
+            dispose();
+            new TelaCadastroCliente();
+        });
+
+
+        botaoGrafico.addActionListener(e -> {
+            JOptionPane.showMessageDialog(this, "Função em desenvolvimento! Gráfico será implementado em breve.", "Info", JOptionPane.INFORMATION_MESSAGE);
+
+        });
+
+
+        botaoExportar.addActionListener(e -> {
+            JOptionPane.showMessageDialog(this, "Função em desenvolvimento! Exportação será implementada em breve.", "Info", JOptionPane.INFORMATION_MESSAGE);
+
+        });
+
+
+        botaoSair.addActionListener(e -> {
+            SessaoUsuario.logout();
+            dispose();
+            new TelaLogin();
+        });
 
         setVisible(true);
     }
