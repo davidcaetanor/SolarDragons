@@ -3,6 +3,7 @@ package model;
 public class Cliente {
     private String nome;
     private String cpf;
+    private String email;
     private String logradouro;
     private String bairro;
     private String cidade;
@@ -15,6 +16,14 @@ public class Cliente {
         this.nome = nome;
     }
 
+    
+    public String getEmail() {
+        return email != null ? email : "";
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
     public String getNome() {
         return nome != null ? nome : "";
