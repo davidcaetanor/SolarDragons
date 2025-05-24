@@ -8,13 +8,13 @@ import service.ViaCEP;
 
 import javax.swing.*;
 
-public class TelaCadastroCliente extends JFrame {
+public class TelaCadastroClienteEdicao extends JFrame {
 
     private JTextField campoNome, campoCpfCliente, campoEmail, campoCep, campoLogradouro, campoNumero, campoBairro, campoCidade, campoEstado;
     private JButton botaoBuscarCep, botaoSalvar, botaoCancelar;
 
-    public TelaCadastroCliente() {
-        setTitle("Cadastro de Cliente");
+    public TelaCadastroClienteEdicao(Cliente cliente) {
+        setTitle("Editar Cliente");
         setSize(500, 480);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
@@ -23,21 +23,22 @@ public class TelaCadastroCliente extends JFrame {
         JLabel labelNome = new JLabel("Nome:");
         labelNome.setBounds(30, 30, 100, 25);
         add(labelNome);
-        campoNome = new JTextField();
+        campoNome = new JTextField(cliente.getNome());
         campoNome.setBounds(140, 30, 280, 25);
         add(campoNome);
 
         JLabel labelCpfCliente = new JLabel("CPF do Cliente:");
         labelCpfCliente.setBounds(30, 70, 100, 25);
         add(labelCpfCliente);
-        campoCpfCliente = new JTextField();
+        campoCpfCliente = new JTextField(cliente.getCpf());
         campoCpfCliente.setBounds(140, 70, 180, 25);
+        campoCpfCliente.setEditable(false); // CPF não pode ser alterado
         add(campoCpfCliente);
 
         JLabel labelEmail = new JLabel("Email:");
         labelEmail.setBounds(30, 110, 100, 25);
         add(labelEmail);
-        campoEmail = new JTextField();
+        campoEmail = new JTextField(cliente.getEmail());
         campoEmail.setBounds(140, 110, 180, 25);
         add(campoEmail);
 
@@ -55,35 +56,35 @@ public class TelaCadastroCliente extends JFrame {
         JLabel labelLogradouro = new JLabel("Logradouro:");
         labelLogradouro.setBounds(30, 190, 100, 25);
         add(labelLogradouro);
-        campoLogradouro = new JTextField();
+        campoLogradouro = new JTextField(cliente.getLogradouro());
         campoLogradouro.setBounds(140, 190, 280, 25);
         add(campoLogradouro);
 
         JLabel labelNumero = new JLabel("Número:");
         labelNumero.setBounds(30, 230, 100, 25);
         add(labelNumero);
-        campoNumero = new JTextField();
+        campoNumero = new JTextField(cliente.getNumero());
         campoNumero.setBounds(140, 230, 90, 25);
         add(campoNumero);
 
         JLabel labelBairro = new JLabel("Bairro:");
         labelBairro.setBounds(30, 270, 100, 25);
         add(labelBairro);
-        campoBairro = new JTextField();
+        campoBairro = new JTextField(cliente.getBairro());
         campoBairro.setBounds(140, 270, 180, 25);
         add(campoBairro);
 
         JLabel labelCidade = new JLabel("Cidade:");
         labelCidade.setBounds(30, 310, 100, 25);
         add(labelCidade);
-        campoCidade = new JTextField();
+        campoCidade = new JTextField(cliente.getCidade());
         campoCidade.setBounds(140, 310, 180, 25);
         add(campoCidade);
 
         JLabel labelEstado = new JLabel("Estado (UF):");
         labelEstado.setBounds(30, 350, 100, 25);
         add(labelEstado);
-        campoEstado = new JTextField();
+        campoEstado = new JTextField(cliente.getEstado());
         campoEstado.setBounds(140, 350, 50, 25);
         add(campoEstado);
 
@@ -97,7 +98,7 @@ public class TelaCadastroCliente extends JFrame {
 
         botaoBuscarCep.addActionListener(e -> buscarCep());
 
-        botaoSalvar.addActionListener(e -> salvarCliente());
+        botaoSalvar.addActionListener(e -> salvarEdicao(cliente));
         botaoCancelar.addActionListener(e -> {
             dispose();
             new TelaGerenciarClientes();
@@ -134,18 +135,16 @@ public class TelaCadastroCliente extends JFrame {
         }
     }
 
-    private void salvarCliente() {
+    private void salvarEdicao(Cliente cliente) {
         String nome = campoNome.getText().trim();
-        String cpfCliente = campoCpfCliente.getText().trim();
         String email = campoEmail.getText().trim();
-        String cep = campoCep.getText().trim();
         String logradouro = campoLogradouro.getText().trim();
         String numero = campoNumero.getText().trim();
         String bairro = campoBairro.getText().trim();
         String cidade = campoCidade.getText().trim();
         String estado = campoEstado.getText().trim().toUpperCase();
 
-        if (nome.isEmpty() || cpfCliente.isEmpty() || email.isEmpty() || cep.isEmpty() || logradouro.isEmpty() ||
+        if (nome.isEmpty() || email.isEmpty() || logradouro.isEmpty() ||
                 numero.isEmpty() || bairro.isEmpty() || cidade.isEmpty() || estado.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Preencha todos os campos!", "Erro", JOptionPane.ERROR_MESSAGE);
             return;
@@ -154,16 +153,13 @@ public class TelaCadastroCliente extends JFrame {
             JOptionPane.showMessageDialog(this, "Informe o estado com 2 letras (UF)", "Erro", JOptionPane.ERROR_MESSAGE);
             return;
         }
-        if (!cpfCliente.matches("\\d{11}")) {
-            JOptionPane.showMessageDialog(this, "CPF do cliente deve conter 11 dígitos numéricos.", "Erro", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
         if (!email.contains("@") || !email.contains(".")) {
             JOptionPane.showMessageDialog(this, "Informe um email válido para o cliente.", "Erro", JOptionPane.ERROR_MESSAGE);
             return;
         }
 
-        Cliente cliente = new Cliente(cpfCliente, nome);
+
+        cliente.setNome(nome);
         cliente.setEmail(email);
         cliente.setLogradouro(logradouro);
         cliente.setNumero(numero);
@@ -172,10 +168,14 @@ public class TelaCadastroCliente extends JFrame {
         cliente.setEstado(estado);
 
         String cpfUsuario = SessaoUsuario.getUsuarioLogado().getCpf();
-        ServicoCadastroCliente.adicionarCliente(cpfUsuario, cliente);
+        boolean atualizado = ServicoCadastroCliente.atualizarCliente(cpfUsuario, cliente);
 
-        JOptionPane.showMessageDialog(this, "Cliente cadastrado com sucesso!");
-        dispose();
-        new TelaGerenciarClientes();
+        if (atualizado) {
+            JOptionPane.showMessageDialog(this, "Cliente atualizado com sucesso!");
+            dispose();
+            new TelaGerenciarClientes();
+        } else {
+            JOptionPane.showMessageDialog(this, "Erro ao atualizar cliente.", "Erro", JOptionPane.ERROR_MESSAGE);
+        }
     }
 }
