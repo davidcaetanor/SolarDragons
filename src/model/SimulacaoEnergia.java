@@ -30,7 +30,6 @@ public class SimulacaoEnergia {
         this.tarifa = tarifaPorEstado.getOrDefault(estado.toUpperCase(), 0.90);
         this.consumoEstimadoKwh = valorContaReais / tarifa;
 
-
         double percentualGeracao = ParametrosSistema.getPercentualGeracao();
         double custoPorKw = ParametrosSistema.getCustoPorKw();
         double fatorEconomia = ParametrosSistema.getFatorEconomia();
@@ -58,17 +57,6 @@ public class SimulacaoEnergia {
 
     public double getPaybackAnos() {
         if (economiaAnual <= 0) return -1;
-
-        double acumulado = 0;
-        int anos = 0;
-        while (acumulado < custoSistema && anos < 50) {
-            acumulado += economiaAnual;
-            anos++;
-        }
-
-        double restante = custoSistema - (acumulado - economiaAnual);
-        double meses = restante / (economiaAnual / 12);
-
-        return anos - 1 + (meses / 12);
+        return custoSistema / economiaAnual;
     }
 }

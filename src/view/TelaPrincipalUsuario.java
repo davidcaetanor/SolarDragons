@@ -7,6 +7,8 @@ import javax.swing.*;
 
 public class TelaPrincipalUsuario extends JFrame {
 
+    private JLabel saudacao;
+
     public TelaPrincipalUsuario() {
         setTitle("Painel do Usuário - SolarDragons");
         setSize(400, 360);
@@ -14,19 +16,19 @@ public class TelaPrincipalUsuario extends JFrame {
         setLocationRelativeTo(null);
         setLayout(null);
 
-        JLabel saudacao = new JLabel("Bem-vindo, " + SessaoUsuario.getUsuarioLogado().getNome() + "!");
+        saudacao = new JLabel("Bem-vindo, " + SessaoUsuario.getUsuarioLogado().getNome() + "!");
         saudacao.setBounds(60, 20, 300, 30);
         add(saudacao);
 
-        JButton botaoGerenciarClientes = new JButton("Gerenciar Clientes");
-        botaoGerenciarClientes.setBounds(120, 60, 150, 30);
-        add(botaoGerenciarClientes);
+        JButton botaoMeusDados = new JButton("Meus Dados");
+        botaoMeusDados.setBounds(120, 60, 150, 30);
+        add(botaoMeusDados);
 
         JButton botaoSimular = new JButton("Simular Economia");
         botaoSimular.setBounds(120, 100, 150, 30);
         add(botaoSimular);
 
-        JButton botaoVerDados = new JButton("Visualizar Dados");
+        JButton botaoVerDados = new JButton("Gerenciar Clientes");
         botaoVerDados.setBounds(120, 140, 150, 30);
         add(botaoVerDados);
 
@@ -42,9 +44,9 @@ public class TelaPrincipalUsuario extends JFrame {
         botaoSair.setBounds(120, 260, 150, 30);
         add(botaoSair);
 
-        botaoGerenciarClientes.addActionListener(e -> {
-            dispose();
-            new TelaGerenciarClientes();
+        botaoMeusDados.addActionListener(e -> {
+            new TelaMeusDados(this);
+            setVisible(false);
         });
 
         botaoSimular.addActionListener(e -> {
@@ -61,11 +63,11 @@ public class TelaPrincipalUsuario extends JFrame {
 
         botaoVerDados.addActionListener(e -> {
             dispose();
-            new TelaCadastroCliente();
+            new TelaGerenciarClientes();
         });
 
         botaoGrafico.addActionListener(e -> {
-            GraficoEconomia.exibirGraficoEconomia();
+            JOptionPane.showMessageDialog(this, "Função em desenvolvimento! Gráfico será implementado em breve.", "Info", JOptionPane.INFORMATION_MESSAGE);
         });
 
         botaoExportar.addActionListener(e -> {
@@ -79,5 +81,10 @@ public class TelaPrincipalUsuario extends JFrame {
         });
 
         setVisible(true);
+    }
+
+
+    public void atualizarSaudacao() {
+        saudacao.setText("Bem-vindo, " + SessaoUsuario.getUsuarioLogado().getNome() + "!");
     }
 }

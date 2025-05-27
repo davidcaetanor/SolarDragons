@@ -106,7 +106,8 @@ public class TelaCadastroUsuario extends JFrame {
             return;
         }
 
-        Usuario novoUsuario = new Usuario(cpf, nome, email, senha, false);
+
+        Usuario novoUsuario = new Usuario(cpf, nome, email, senha, false, false);
         boolean cadastrado = AutenticacaoUser.cadastrarUsuario(novoUsuario);
 
         if (cadastrado) {

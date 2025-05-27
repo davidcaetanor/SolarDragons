@@ -11,6 +11,7 @@ import java.util.List;
 public class TelaGerenciarUsuarios extends JFrame {
     private JTable tabelaUsuarios;
     private DefaultTableModel tableModel;
+    private boolean admRoot;
 
     public TelaGerenciarUsuarios() {
         setTitle("Gerenciar Usuários");
@@ -19,11 +20,13 @@ public class TelaGerenciarUsuarios extends JFrame {
         setLocationRelativeTo(null);
         setLayout(null);
 
+        admRoot = SessaoUsuario.getUsuarioLogado().isRootAdmin();
+
         JLabel label = new JLabel("Usuários do sistema:");
         label.setBounds(20, 15, 200, 25);
         add(label);
 
-        String[] colunas = {"Nome", "CPF", "Email", "Tipo"};
+        String[] colunas = {"Nome", "CPF", "Email", "Tipo", "ADM Raiz"};
         tableModel = new DefaultTableModel(colunas, 0) {
             public boolean isCellEditable(int row, int column) { return false; }
         };
@@ -62,7 +65,8 @@ public class TelaGerenciarUsuarios extends JFrame {
         for (Usuario u : usuarios) {
             tableModel.addRow(new Object[]{
                     u.getNome(), u.getCpf(), u.getEmail(),
-                    u.isAdmin() ? "ADM" : "Usuário"
+                    u.isAdmin() ? "ADM" : "Usuário",
+                    u.isRootAdmin() ? "SIM" : "NÃO"
             });
         }
     }
@@ -77,6 +81,15 @@ public class TelaGerenciarUsuarios extends JFrame {
         List<Usuario> usuarios = AutenticacaoUser.listarUsuarios();
         for (Usuario u : usuarios) {
             if (u.getCpf().equals(cpf)) {
+
+                if (!admRoot && u.isAdmin()) {
+                    JOptionPane.showMessageDialog(this, "Apenas o ADM raiz pode alterar privilégios de outros ADMs.", "Acesso negado", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+                if (u.isRootAdmin()) {
+                    JOptionPane.showMessageDialog(this, "O ADM raiz não pode ser rebaixado!", "Acesso negado", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
                 if (u.isAdmin()) {
                     int confirm = JOptionPane.showConfirmDialog(this, "Deseja remover os privilégios de ADM deste usuário?", "Confirmação", JOptionPane.YES_NO_OPTION);
                     if (confirm == JOptionPane.YES_OPTION) {
@@ -84,8 +97,8 @@ public class TelaGerenciarUsuarios extends JFrame {
                         atualizarTabela();
                     }
                 } else {
-                    int confirma = JOptionPane.showConfirmDialog(this, "Deseja promover este usuário a ADM?", "Confirmação", JOptionPane.YES_NO_OPTION);
-                    if (confirma == JOptionPane.YES_OPTION) {
+                    int confirm = JOptionPane.showConfirmDialog(this, "Deseja promover este usuário a ADM?", "Confirmação", JOptionPane.YES_NO_OPTION);
+                    if (confirm == JOptionPane.YES_OPTION) {
                         u.setAdmin(true);
                         atualizarTabela();
                     }
@@ -102,6 +115,7 @@ public class TelaGerenciarUsuarios extends JFrame {
             return;
         }
         String cpf = (String) tableModel.getValueAt(linha, 1);
+
         if (cpf.equals(SessaoUsuario.getUsuarioLogado().getCpf())) {
             JOptionPane.showMessageDialog(this, "Você não pode remover a si mesmo!", "Erro", JOptionPane.ERROR_MESSAGE);
             return;
@@ -110,6 +124,14 @@ public class TelaGerenciarUsuarios extends JFrame {
         Usuario paraRemover = null;
         for (Usuario u : usuarios) {
             if (u.getCpf().equals(cpf)) {
+                if (u.isRootAdmin()) {
+                    JOptionPane.showMessageDialog(this, "O ADM raiz não pode ser removido!", "Acesso negado", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+                if (u.isAdmin() && !admRoot) {
+                    JOptionPane.showMessageDialog(this, "Apenas o ADM raiz pode remover outros ADMs.", "Acesso negado", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
                 paraRemover = u;
                 break;
             }
