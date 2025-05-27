@@ -80,7 +80,6 @@ public class TelaSimulacaoEconomia extends JFrame {
             return;
         }
 
-
         String[] opcoes = clientes.stream()
                 .map(c -> c.getNome() + " - " + c.getCpf())
                 .toArray(String[]::new);

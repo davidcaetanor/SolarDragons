@@ -1,10 +1,10 @@
 package view;
 
 import model.Cliente;
-import model.Endereco;
 import service.ServicoCadastroCliente;
 import service.SessaoUsuario;
 import service.ViaCEP;
+import model.Endereco;
 
 import javax.swing.*;
 
@@ -170,12 +170,18 @@ public class TelaCadastroCliente extends JFrame {
         cliente.setBairro(bairro);
         cliente.setCidade(cidade);
         cliente.setEstado(estado);
+        cliente.setCep(cep);
 
         String cpfUsuario = SessaoUsuario.getUsuarioLogado().getCpf();
-        ServicoCadastroCliente.adicionarCliente(cpfUsuario, cliente);
+        cliente.setCpfUsuario(cpfUsuario);
 
-        JOptionPane.showMessageDialog(this, "Cliente cadastrado com sucesso!");
-        dispose();
-        new TelaGerenciarClientes();
+        boolean cadastrado = ServicoCadastroCliente.adicionarCliente(cliente, cpfUsuario);
+        if (cadastrado) {
+            JOptionPane.showMessageDialog(this, "Cliente cadastrado com sucesso!");
+            dispose();
+            new TelaGerenciarClientes();
+        } else {
+            JOptionPane.showMessageDialog(this, "Erro ao cadastrar cliente! Verifique se já existe cliente com esse CPF para você.", "Erro", JOptionPane.ERROR_MESSAGE);
+        }
     }
 }

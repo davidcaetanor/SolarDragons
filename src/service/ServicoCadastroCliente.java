@@ -1,67 +1,44 @@
 package service;
 
+import database.ClienteDAO;
 import model.Cliente;
-import java.util.*;
+
+import java.util.List;
 
 public class ServicoCadastroCliente {
 
+    private static final ClienteDAO clienteDAO = new ClienteDAO();
 
-    private static final Map<String, List<Cliente>> clientesPorUsuario = new HashMap<>();
 
-
-    public static void adicionarCliente(String cpfUsuario, Cliente cliente) {
-        if (cpfUsuario == null || cpfUsuario.isEmpty() || cliente == null) return;
-        List<Cliente> lista = clientesPorUsuario.getOrDefault(cpfUsuario, new ArrayList<>());
-        lista.add(cliente);
-        clientesPorUsuario.put(cpfUsuario, lista);
+    public static boolean adicionarCliente(Cliente cliente, String cpfUsuario) {
+        cliente.setCpfUsuario(cpfUsuario);
+        return clienteDAO.inserirCliente(cliente);
     }
 
 
     public static List<Cliente> listarClientesDoUsuario(String cpfUsuario) {
-        return clientesPorUsuario.getOrDefault(cpfUsuario, new ArrayList<>());
+        return clienteDAO.listarClientesDoUsuario(cpfUsuario);
     }
 
 
     public static Cliente buscarClientePorCpfCliente(String cpfUsuario, String cpfCliente) {
-        for (Cliente c : listarClientesDoUsuario(cpfUsuario)) {
-            if (c.getCpf().equals(cpfCliente)) return c;
-        }
-        return null;
-    }
-
-
-    public static boolean clienteExiste(String cpfUsuario) {
-        List<Cliente> lista = clientesPorUsuario.get(cpfUsuario);
-        return lista != null && !lista.isEmpty();
-    }
-
-
-    public static boolean removerCliente(String cpfUsuario, String cpfCliente) {
-        List<Cliente> lista = clientesPorUsuario.get(cpfUsuario);
-        if (lista != null) {
-            Iterator<Cliente> it = lista.iterator();
-            while (it.hasNext()) {
-                Cliente c = it.next();
-                if (c.getCpf().equals(cpfCliente)) {
-                    it.remove();
-                    return true;
-                }
-            }
-        }
-        return false;
+        return clienteDAO.buscarClientePorCpf(cpfCliente, cpfUsuario);
     }
 
 
     public static boolean atualizarCliente(String cpfUsuario, Cliente clienteAtualizado) {
-        List<Cliente> lista = clientesPorUsuario.get(cpfUsuario);
-        if (lista != null) {
-            for (int i = 0; i < lista.size(); i++) {
-                if (lista.get(i).getCpf().equals(clienteAtualizado.getCpf())) {
-                    lista.set(i, clienteAtualizado);
-                    return true;
-                }
-            }
-        }
-        return false;
+        clienteAtualizado.setCpfUsuario(cpfUsuario);
+        return clienteDAO.atualizarCliente(clienteAtualizado);
+    }
+
+
+    public static boolean removerCliente(String cpfUsuario, String cpfCliente) {
+        return clienteDAO.removerCliente(cpfCliente, cpfUsuario);
+    }
+
+
+    public static boolean clienteExiste(String cpfUsuario) {
+        List<Cliente> lista = clienteDAO.listarClientesDoUsuario(cpfUsuario);
+        return lista != null && !lista.isEmpty();
     }
 }

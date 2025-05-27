@@ -12,6 +12,7 @@
         <CLASSES>
           <root url="jar://$MODULE_DIR$/lib/json-20240303.jar!/" />
           <root url="jar://$MODULE_DIR$/lib/xchart-3.8.2.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/mysql-connector-j-9.3.0.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />

@@ -6,7 +6,6 @@ import service.SessaoUsuario;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-import java.awt.*;
 import java.util.List;
 
 public class TelaGerenciarClientes extends JFrame {
@@ -23,7 +22,6 @@ public class TelaGerenciarClientes extends JFrame {
         JLabel labelTitulo = new JLabel("Clientes cadastrados:");
         labelTitulo.setBounds(20, 15, 200, 25);
         add(labelTitulo);
-
 
         String[] colunas = {"Nome", "CPF", "Email", "Cidade", "Estado"};
         tableModel = new DefaultTableModel(colunas, 0) {

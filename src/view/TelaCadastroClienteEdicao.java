@@ -4,6 +4,7 @@ import model.Cliente;
 import service.ServicoCadastroCliente;
 import service.SessaoUsuario;
 import service.ViaCEP;
+import model.Endereco;
 
 import javax.swing.*;
 
@@ -34,7 +35,7 @@ public class TelaCadastroClienteEdicao extends JFrame {
         add(labelCpf);
         campoCpf = new JTextField();
         campoCpf.setBounds(140, 70, 180, 25);
-        campoCpf.setEditable(false); // CPF não pode ser alterado
+        campoCpf.setEditable(false);
         add(campoCpf);
 
         JLabel labelEmail = new JLabel("E-mail:");
@@ -118,6 +119,7 @@ public class TelaCadastroClienteEdicao extends JFrame {
             campoNome.setText(cliente.getNome());
             campoCpf.setText(cliente.getCpf());
             campoEmail.setText(cliente.getEmail());
+            campoCep.setText(cliente.getCep());
             campoLogradouro.setText(cliente.getLogradouro());
             campoNumero.setText(cliente.getNumero());
             campoBairro.setText(cliente.getBairro());
@@ -133,7 +135,7 @@ public class TelaCadastroClienteEdicao extends JFrame {
             return;
         }
         try {
-            model.Endereco endereco = ViaCEP.buscarEnderecoPorCEP(cep);
+            Endereco endereco = ViaCEP.buscarEnderecoPorCEP(cep);
             campoLogradouro.setText(endereco.getLogradouro());
             campoBairro.setText(endereco.getBairro());
             campoCidade.setText(endereco.getCidade());
@@ -154,13 +156,14 @@ public class TelaCadastroClienteEdicao extends JFrame {
     private void salvarEdicao() {
         String nome = campoNome.getText().trim();
         String email = campoEmail.getText().trim();
+        String cep = campoCep.getText().trim();
         String logradouro = campoLogradouro.getText().trim();
         String numero = campoNumero.getText().trim();
         String bairro = campoBairro.getText().trim();
         String cidade = campoCidade.getText().trim();
         String estado = campoEstado.getText().trim().toUpperCase();
 
-        if (nome.isEmpty() || email.isEmpty() || logradouro.isEmpty() ||
+        if (nome.isEmpty() || email.isEmpty() || cep.isEmpty() || logradouro.isEmpty() ||
                 numero.isEmpty() || bairro.isEmpty() || cidade.isEmpty() || estado.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Preencha todos os campos!", "Erro", JOptionPane.ERROR_MESSAGE);
             return;
@@ -172,11 +175,13 @@ public class TelaCadastroClienteEdicao extends JFrame {
         String cpfUsuario = SessaoUsuario.getUsuarioLogado().getCpf();
         Cliente cliente = new Cliente(cpfCliente, nome);
         cliente.setEmail(email);
+        cliente.setCep(cep);
         cliente.setLogradouro(logradouro);
         cliente.setNumero(numero);
         cliente.setBairro(bairro);
         cliente.setCidade(cidade);
         cliente.setEstado(estado);
+        cliente.setCpfUsuario(cpfUsuario);
 
         ServicoCadastroCliente.atualizarCliente(cpfUsuario, cliente);
 

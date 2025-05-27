@@ -81,7 +81,7 @@ public class TelaGerenciarUsuarios extends JFrame {
         List<Usuario> usuarios = AutenticacaoUser.listarUsuarios();
         for (Usuario u : usuarios) {
             if (u.getCpf().equals(cpf)) {
-
+                // Só o ADM raiz pode promover/demitir outros ADMs
                 if (!admRoot && u.isAdmin()) {
                     JOptionPane.showMessageDialog(this, "Apenas o ADM raiz pode alterar privilégios de outros ADMs.", "Acesso negado", JOptionPane.ERROR_MESSAGE);
                     return;
@@ -128,6 +128,7 @@ public class TelaGerenciarUsuarios extends JFrame {
                     JOptionPane.showMessageDialog(this, "O ADM raiz não pode ser removido!", "Acesso negado", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
+
                 if (u.isAdmin() && !admRoot) {
                     JOptionPane.showMessageDialog(this, "Apenas o ADM raiz pode remover outros ADMs.", "Acesso negado", JOptionPane.ERROR_MESSAGE);
                     return;
