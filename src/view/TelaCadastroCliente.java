@@ -176,13 +176,22 @@ public class TelaCadastroCliente extends JFrame {
         cliente.setCpfUsuario(cpfUsuario);
 
         ClienteDAO clienteDAO = new ClienteDAO();
+        if (clienteDAO.emailExisteParaUsuario(email, cpfUsuario)) {
+            JOptionPane.showMessageDialog(this, "Já existe um cliente com este e-mail cadastrado para o seu usuário.", "Erro", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        if (clienteDAO.cpfExisteParaUsuario(cpfCliente, cpfUsuario)) {
+            JOptionPane.showMessageDialog(this, "Já existe um cliente com este CPF cadastrado para o seu usuário.", "Erro", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
         boolean cadastrado = clienteDAO.cadastrar(cliente, cpfUsuario);
         if (cadastrado) {
             JOptionPane.showMessageDialog(this, "Cliente cadastrado com sucesso!");
             dispose();
             new TelaGerenciarClientes();
         } else {
-            JOptionPane.showMessageDialog(this, "Erro ao cadastrar cliente! Verifique se já existe cliente com esse CPF para você.", "Erro", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Erro ao cadastrar cliente! Verifique se já existe cliente com esse CPF ou e-mail para você.", "Erro", JOptionPane.ERROR_MESSAGE);
         }
     }
 }

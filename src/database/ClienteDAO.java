@@ -8,7 +8,52 @@ import java.util.List;
 
 public class ClienteDAO {
 
+
+    public boolean emailExisteParaUsuario(String email, String cpfUsuario) {
+        String sql = "SELECT COUNT(*) FROM cliente WHERE email = ? AND cpf_usuario = ?";
+        try (Connection conn = ConexaoMySQL.getConexao();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, email);
+            stmt.setString(2, cpfUsuario);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1) > 0;
+            }
+        } catch (SQLException e) {
+            System.out.println("Erro ao verificar email: " + e.getMessage());
+        }
+        return false;
+    }
+
+
+    public boolean cpfExisteParaUsuario(String cpf, String cpfUsuario) {
+        String sql = "SELECT COUNT(*) FROM cliente WHERE cpf = ? AND cpf_usuario = ?";
+        try (Connection conn = ConexaoMySQL.getConexao();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, cpf);
+            stmt.setString(2, cpfUsuario);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1) > 0;
+            }
+        } catch (SQLException e) {
+            System.out.println("Erro ao verificar cpf: " + e.getMessage());
+        }
+        return false;
+    }
+
+
     public boolean cadastrar(Cliente c, String cpfUsuario) {
+
+        if (cpfExisteParaUsuario(c.getCpf(), cpfUsuario)) {
+            System.out.println("CPF já cadastrado para este usuário.");
+            return false;
+        }
+        if (emailExisteParaUsuario(c.getEmail(), cpfUsuario)) {
+            System.out.println("Email já cadastrado para este usuário.");
+            return false;
+        }
+
         String sql = "INSERT INTO cliente (nome, email, cpf, logradouro, numero, bairro, cidade, estado, cep, cpf_usuario) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try (Connection conn = ConexaoMySQL.getConexao();
              PreparedStatement stmt = conn.prepareStatement(sql)) {

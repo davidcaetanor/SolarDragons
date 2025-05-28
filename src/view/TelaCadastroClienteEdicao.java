@@ -174,20 +174,31 @@ public class TelaCadastroClienteEdicao extends JFrame {
             return;
         }
         String cpfUsuario = SessaoUsuario.getUsuarioLogado().getCpf();
-        Cliente cliente = new Cliente(cpfCliente, nome);
-        cliente.setEmail(email);
-        cliente.setLogradouro(logradouro);
-        cliente.setNumero(numero);
-        cliente.setBairro(bairro);
-        cliente.setCidade(cidade);
-        cliente.setEstado(estado);
-        cliente.setCep(cep);
-
-        cliente.setCpfUsuario(cpfUsuario);
 
         ClienteDAO clienteDAO = new ClienteDAO();
-        boolean atualizado = clienteDAO.atualizar(cliente, cpfUsuario);
+        Cliente clienteExistente = clienteDAO.buscarPorCpfCliente(cpfUsuario, cpfCliente);
+        if (clienteExistente == null) {
+            JOptionPane.showMessageDialog(this, "Cliente não encontrado para edição!", "Erro", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
 
+
+        if (!email.equals(clienteExistente.getEmail()) && clienteDAO.emailExisteParaUsuario(email, cpfUsuario)) {
+            JOptionPane.showMessageDialog(this, "Já existe um cliente com este e-mail cadastrado para o seu usuário.", "Erro", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        Cliente clienteEditado = new Cliente(cpfCliente, nome);
+        clienteEditado.setEmail(email);
+        clienteEditado.setLogradouro(logradouro);
+        clienteEditado.setNumero(numero);
+        clienteEditado.setBairro(bairro);
+        clienteEditado.setCidade(cidade);
+        clienteEditado.setEstado(estado);
+        clienteEditado.setCep(cep);
+        clienteEditado.setCpfUsuario(cpfUsuario);
+
+        boolean atualizado = clienteDAO.atualizar(clienteEditado, cpfUsuario);
         if (atualizado) {
             JOptionPane.showMessageDialog(this, "Cliente atualizado com sucesso!");
             dispose();
