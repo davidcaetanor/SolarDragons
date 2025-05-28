@@ -1,6 +1,7 @@
 package model;
 
 public class Cliente {
+    private int id;
     private String nome;
     private String cpf;
     private String email;
@@ -11,13 +12,14 @@ public class Cliente {
     private String numero;
     private String cep;
     private String cpfUsuario;
-    private SimulacaoEnergia simulacao;
 
     public Cliente(String cpf, String nome) {
         this.cpf = cpf;
         this.nome = nome;
     }
 
+    public int getId() { return id; }
+    public void setId(int id) { this.id = id; }
 
     public String getEmail() { return email != null ? email : ""; }
     public void setEmail(String email) { this.email = email; }
@@ -48,7 +50,4 @@ public class Cliente {
 
     public String getCpfUsuario() { return cpfUsuario != null ? cpfUsuario : ""; }
     public void setCpfUsuario(String cpfUsuario) { this.cpfUsuario = cpfUsuario; }
-
-    public SimulacaoEnergia getSimulacao() { return simulacao; }
-    public void setSimulacao(SimulacaoEnergia simulacao) { this.simulacao = simulacao; }
 }

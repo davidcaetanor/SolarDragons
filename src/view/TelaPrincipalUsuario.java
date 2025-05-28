@@ -1,7 +1,7 @@
 package view;
 
+import database.ClienteDAO;
 import service.SessaoUsuario;
-import service.ServicoCadastroCliente;
 
 import javax.swing.*;
 
@@ -51,7 +51,10 @@ public class TelaPrincipalUsuario extends JFrame {
 
         botaoSimular.addActionListener(e -> {
             String cpf = SessaoUsuario.getUsuarioLogado().getCpf();
-            if (!ServicoCadastroCliente.clienteExiste(cpf)) {
+            ClienteDAO clienteDAO = new ClienteDAO();
+            boolean existeCliente = !clienteDAO.listarPorUsuario(cpf).isEmpty();
+
+            if (!existeCliente) {
                 JOptionPane.showMessageDialog(this, "Você precisa cadastrar seus dados antes de simular!", "Atenção", JOptionPane.WARNING_MESSAGE);
                 dispose();
                 new TelaCadastroCliente();
@@ -67,7 +70,7 @@ public class TelaPrincipalUsuario extends JFrame {
         });
 
         botaoGrafico.addActionListener(e -> {
-            JOptionPane.showMessageDialog(this, "Função em desenvolvimento! Gráfico será implementado em breve.", "Info", JOptionPane.INFORMATION_MESSAGE);
+            GraficoEconomia.exibirGraficoEconomia();
         });
 
         botaoExportar.addActionListener(e -> {
@@ -82,7 +85,6 @@ public class TelaPrincipalUsuario extends JFrame {
 
         setVisible(true);
     }
-
 
     public void atualizarSaudacao() {
         saudacao.setText("Bem-vindo, " + SessaoUsuario.getUsuarioLogado().getNome() + "!");

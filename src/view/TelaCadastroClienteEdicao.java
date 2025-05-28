@@ -1,7 +1,7 @@
 package view;
 
 import model.Cliente;
-import service.ServicoCadastroCliente;
+import database.ClienteDAO;
 import service.SessaoUsuario;
 import service.ViaCEP;
 import model.Endereco;
@@ -35,7 +35,7 @@ public class TelaCadastroClienteEdicao extends JFrame {
         add(labelCpf);
         campoCpf = new JTextField();
         campoCpf.setBounds(140, 70, 180, 25);
-        campoCpf.setEditable(false);
+        campoCpf.setEditable(false); // CPF não pode ser alterado
         add(campoCpf);
 
         JLabel labelEmail = new JLabel("E-mail:");
@@ -113,18 +113,19 @@ public class TelaCadastroClienteEdicao extends JFrame {
 
     private void carregarCliente() {
         String cpfUsuario = SessaoUsuario.getUsuarioLogado().getCpf();
-        Cliente cliente = ServicoCadastroCliente.buscarClientePorCpfCliente(cpfUsuario, cpfCliente);
+        ClienteDAO clienteDAO = new ClienteDAO();
+        Cliente cliente = clienteDAO.buscarPorCpfCliente(cpfUsuario, cpfCliente);
 
         if (cliente != null) {
             campoNome.setText(cliente.getNome());
             campoCpf.setText(cliente.getCpf());
             campoEmail.setText(cliente.getEmail());
-            campoCep.setText(cliente.getCep());
             campoLogradouro.setText(cliente.getLogradouro());
             campoNumero.setText(cliente.getNumero());
             campoBairro.setText(cliente.getBairro());
             campoCidade.setText(cliente.getCidade());
             campoEstado.setText(cliente.getEstado());
+            campoCep.setText(cliente.getCep());
         }
     }
 
@@ -156,15 +157,15 @@ public class TelaCadastroClienteEdicao extends JFrame {
     private void salvarEdicao() {
         String nome = campoNome.getText().trim();
         String email = campoEmail.getText().trim();
-        String cep = campoCep.getText().trim();
         String logradouro = campoLogradouro.getText().trim();
         String numero = campoNumero.getText().trim();
         String bairro = campoBairro.getText().trim();
         String cidade = campoCidade.getText().trim();
         String estado = campoEstado.getText().trim().toUpperCase();
+        String cep = campoCep.getText().trim();
 
-        if (nome.isEmpty() || email.isEmpty() || cep.isEmpty() || logradouro.isEmpty() ||
-                numero.isEmpty() || bairro.isEmpty() || cidade.isEmpty() || estado.isEmpty()) {
+        if (nome.isEmpty() || email.isEmpty() || logradouro.isEmpty() ||
+                numero.isEmpty() || bairro.isEmpty() || cidade.isEmpty() || estado.isEmpty() || cep.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Preencha todos os campos!", "Erro", JOptionPane.ERROR_MESSAGE);
             return;
         }
@@ -175,18 +176,24 @@ public class TelaCadastroClienteEdicao extends JFrame {
         String cpfUsuario = SessaoUsuario.getUsuarioLogado().getCpf();
         Cliente cliente = new Cliente(cpfCliente, nome);
         cliente.setEmail(email);
-        cliente.setCep(cep);
         cliente.setLogradouro(logradouro);
         cliente.setNumero(numero);
         cliente.setBairro(bairro);
         cliente.setCidade(cidade);
         cliente.setEstado(estado);
+        cliente.setCep(cep);
+
         cliente.setCpfUsuario(cpfUsuario);
 
-        ServicoCadastroCliente.atualizarCliente(cpfUsuario, cliente);
+        ClienteDAO clienteDAO = new ClienteDAO();
+        boolean atualizado = clienteDAO.atualizar(cliente, cpfUsuario);
 
-        JOptionPane.showMessageDialog(this, "Cliente atualizado com sucesso!");
-        dispose();
-        new TelaGerenciarClientes();
+        if (atualizado) {
+            JOptionPane.showMessageDialog(this, "Cliente atualizado com sucesso!");
+            dispose();
+            new TelaGerenciarClientes();
+        } else {
+            JOptionPane.showMessageDialog(this, "Erro ao atualizar cliente!", "Erro", JOptionPane.ERROR_MESSAGE);
+        }
     }
 }

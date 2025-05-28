@@ -3,8 +3,10 @@ package view;
 import model.Cliente;
 import model.Usuario;
 import model.SimulacaoEnergia;
-import service.AutenticacaoUser;
-import service.ServicoCadastroCliente;
+import database.UsuarioDAO;
+import database.ClienteDAO;
+import database.SimulacaoEnergiaDAO;
+
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.util.List;
@@ -15,7 +17,7 @@ public class TelaADMSimulacoes extends JFrame {
 
     public TelaADMSimulacoes() {
         setTitle("Simulações Registradas");
-        setSize(850, 400);
+        setSize(950, 400);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
         setLayout(null);
@@ -30,11 +32,11 @@ public class TelaADMSimulacoes extends JFrame {
         };
         tabelaSimulacoes = new JTable(tableModel);
         JScrollPane scrollPane = new JScrollPane(tabelaSimulacoes);
-        scrollPane.setBounds(20, 45, 780, 240);
+        scrollPane.setBounds(20, 45, 880, 240);
         add(scrollPane);
 
         JButton botaoVoltar = new JButton("Voltar");
-        botaoVoltar.setBounds(350, 310, 100, 30);
+        botaoVoltar.setBounds(400, 310, 100, 30);
         add(botaoVoltar);
 
         botaoVoltar.addActionListener(e -> {
@@ -49,12 +51,16 @@ public class TelaADMSimulacoes extends JFrame {
 
     private void atualizarTabela() {
         tableModel.setRowCount(0);
-        List<Usuario> usuarios = AutenticacaoUser.listarUsuarios();
+        UsuarioDAO usuarioDAO = new UsuarioDAO();
+        ClienteDAO clienteDAO = new ClienteDAO();
+        SimulacaoEnergiaDAO simulacaoDAO = new SimulacaoEnergiaDAO();
+
+        List<Usuario> usuarios = usuarioDAO.listar();
         for (Usuario usuario : usuarios) {
-            List<Cliente> clientes = ServicoCadastroCliente.listarClientesDoUsuario(usuario.getCpf());
+            List<Cliente> clientes = clienteDAO.listarPorUsuario(usuario.getCpf());
             for (Cliente c : clientes) {
-                SimulacaoEnergia s = c.getSimulacao();
-                if (s != null) {
+                List<SimulacaoEnergia> simulacoes = simulacaoDAO.listarPorCliente(c.getId());
+                for (SimulacaoEnergia s : simulacoes) {
                     tableModel.addRow(new Object[]{
                             usuario.getNome(),
                             c.getNome(),

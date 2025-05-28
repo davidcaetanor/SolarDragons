@@ -1,13 +1,11 @@
 package view;
 
 import model.Usuario;
-import service.AutenticacaoUser;
+import database.UsuarioDAO;
 import service.SessaoUsuario;
 
 import javax.swing.*;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+
 
 public class TelaLogin extends JFrame {
 
@@ -47,41 +45,36 @@ public class TelaLogin extends JFrame {
         botaoCadastrar.setBounds(170, 120, 100, 30);
         add(botaoCadastrar);
 
-        botaoEntrar.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String cpf = campoCpf.getText().trim();
-                String senha = new String(campoSenha.getPassword()).trim();
-
-                Usuario usuario = AutenticacaoUser.autenticar(cpf, senha);
-
-                if (usuario != null) {
-                    SessaoUsuario.login(usuario);
-                    JOptionPane.showMessageDialog(null, "Login realizado com sucesso!");
-
-                    dispose();
-
-                    if (usuario.isAdmin()) {
-                        new TelaADM();
-                    } else {
-                        new TelaPrincipalUsuario();
-                    }
-
-                } else {
-                    JOptionPane.showMessageDialog(null, "CPF ou senha inválidos!", "Erro", JOptionPane.ERROR_MESSAGE);
-                }
-            }
-        });
-
-        botaoCadastrar.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                dispose();
-                new TelaCadastroUsuario();
-            }
+        botaoEntrar.addActionListener(e -> realizarLogin());
+        botaoCadastrar.addActionListener(e -> {
+            dispose();
+            new TelaCadastroUsuario();
         });
 
         setVisible(true);
     }
 
+    private void realizarLogin() {
+        String cpf = campoCpf.getText().trim();
+        String senha = new String(campoSenha.getPassword()).trim();
+
+        UsuarioDAO usuarioDAO = new UsuarioDAO();
+        Usuario usuario = usuarioDAO.autenticar(cpf, senha);
+
+        if (usuario != null) {
+            SessaoUsuario.login(usuario);
+            JOptionPane.showMessageDialog(this, "Login realizado com sucesso!");
+
+            dispose();
+
+            if (usuario.isAdmin()) {
+                new TelaADM();
+            } else {
+                new TelaPrincipalUsuario();
+            }
+
+        } else {
+            JOptionPane.showMessageDialog(this, "CPF ou senha inválidos!", "Erro", JOptionPane.ERROR_MESSAGE);
+        }
+    }
 }

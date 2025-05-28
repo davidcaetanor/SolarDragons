@@ -1,7 +1,7 @@
 package view;
 
 import model.Usuario;
-import service.AutenticacaoUser;
+import database.UsuarioDAO;
 
 import javax.swing.*;
 
@@ -106,16 +106,27 @@ public class TelaCadastroUsuario extends JFrame {
             return;
         }
 
+        UsuarioDAO usuarioDAO = new UsuarioDAO();
+
+        if (usuarioDAO.cpfExiste(cpf)) {
+            JOptionPane.showMessageDialog(this, "CPF já cadastrado!", "Erro", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        if (usuarioDAO.emailExiste(email)) {
+            JOptionPane.showMessageDialog(this, "Este e-mail já está em uso!", "Erro", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
 
         Usuario novoUsuario = new Usuario(cpf, nome, email, senha, false, false);
-        boolean cadastrado = AutenticacaoUser.cadastrarUsuario(novoUsuario);
+        boolean cadastrado = usuarioDAO.cadastrar(novoUsuario);
 
         if (cadastrado) {
             JOptionPane.showMessageDialog(this, "Usuário cadastrado com sucesso!");
             dispose();
             new TelaLogin();
         } else {
-            JOptionPane.showMessageDialog(this, "CPF já cadastrado!", "Erro", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Ocorreu um erro ao cadastrar o usuário!", "Erro", JOptionPane.ERROR_MESSAGE);
         }
     }
 }

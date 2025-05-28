@@ -1,7 +1,7 @@
 package view;
 
 import model.Cliente;
-import service.ServicoCadastroCliente;
+import database.ClienteDAO;
 import service.SessaoUsuario;
 import service.ViaCEP;
 import model.Endereco;
@@ -175,7 +175,8 @@ public class TelaCadastroCliente extends JFrame {
         String cpfUsuario = SessaoUsuario.getUsuarioLogado().getCpf();
         cliente.setCpfUsuario(cpfUsuario);
 
-        boolean cadastrado = ServicoCadastroCliente.adicionarCliente(cliente, cpfUsuario);
+        ClienteDAO clienteDAO = new ClienteDAO();
+        boolean cadastrado = clienteDAO.cadastrar(cliente, cpfUsuario);
         if (cadastrado) {
             JOptionPane.showMessageDialog(this, "Cliente cadastrado com sucesso!");
             dispose();

@@ -2,8 +2,9 @@ package view;
 
 import model.Cliente;
 import model.SimulacaoEnergia;
+import database.ClienteDAO;
+import database.SimulacaoEnergiaDAO;
 import service.SessaoUsuario;
-import service.ServicoCadastroCliente;
 import org.knowm.xchart.CategoryChart;
 import org.knowm.xchart.CategoryChartBuilder;
 import org.knowm.xchart.XChartPanel;
@@ -21,11 +22,14 @@ public class GraficoEconomia {
     public static void exibirGraficoEconomia() {
 
         String cpfUsuario = SessaoUsuario.getUsuarioLogado().getCpf();
-        List<Cliente> clientes = ServicoCadastroCliente.listarClientesDoUsuario(cpfUsuario);
+        ClienteDAO clienteDAO = new ClienteDAO();
+        SimulacaoEnergiaDAO simulacaoDAO = new SimulacaoEnergiaDAO();
+
+        List<Cliente> clientes = clienteDAO.listarPorUsuario(cpfUsuario);
 
 
         List<Cliente> comSimulacao = clientes.stream()
-                .filter(c -> c.getSimulacao() != null)
+                .filter(c -> simulacaoDAO.buscarUltimaSimulacao(c.getId()) != null)
                 .collect(Collectors.toList());
 
         if (comSimulacao.isEmpty()) {
@@ -38,18 +42,21 @@ public class GraficoEconomia {
                 .map(c -> c.getNome() + " (" + c.getCpf().substring(0, 3) + "...)")
                 .collect(Collectors.toList());
 
-        List<Double> economia5Anos = comSimulacao.stream()
-                .map(c -> c.getSimulacao().getEconomiaAnual() * 5)
+        List<SimulacaoEnergia> simulacoes = comSimulacao.stream()
+                .map(c -> simulacaoDAO.buscarUltimaSimulacao(c.getId()))
                 .collect(Collectors.toList());
 
-        List<Double> investimentoInicial = comSimulacao.stream()
-                .map(c -> c.getSimulacao().getCustoSistema())
+        List<Double> economia5Anos = simulacoes.stream()
+                .map(s -> s.getEconomiaAnual() * 5)
                 .collect(Collectors.toList());
 
-        List<String> paybacks = comSimulacao.stream()
-                .map(c -> formatarPayback(c.getSimulacao().getPaybackAnos()))
+        List<Double> investimentoInicial = simulacoes.stream()
+                .map(SimulacaoEnergia::getCustoSistema)
                 .collect(Collectors.toList());
 
+        List<String> paybacks = simulacoes.stream()
+                .map(s -> formatarPayback(s.getPaybackAnos()))
+                .collect(Collectors.toList());
 
         CategoryChart chart = new CategoryChartBuilder()
                 .width(950)
@@ -76,7 +83,6 @@ public class GraficoEconomia {
         chart.addSeries("Economia em 5 anos", nomesClientes, economia5Anos);
         chart.addSeries("Investimento Inicial", nomesClientes, investimentoInicial);
 
-
         SwingUtilities.invokeLater(() -> {
             JFrame frame = new JFrame("Gráfico - Economia x Investimento");
             frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -84,7 +90,6 @@ public class GraficoEconomia {
 
             JPanel painelChart = new XChartPanel<>(chart);
             frame.add(painelChart, BorderLayout.CENTER);
-
 
             JTextArea texto = new JTextArea();
             texto.setEditable(false);

@@ -2,7 +2,8 @@ package view;
 
 import model.Cliente;
 import model.SimulacaoEnergia;
-import service.ServicoCadastroCliente;
+import database.ClienteDAO;
+import database.SimulacaoEnergiaDAO;
 import service.SessaoUsuario;
 
 import javax.swing.*;
@@ -73,7 +74,8 @@ public class TelaSimulacaoEconomia extends JFrame {
         }
 
         String cpfUsuario = SessaoUsuario.getUsuarioLogado().getCpf();
-        List<Cliente> clientes = ServicoCadastroCliente.listarClientesDoUsuario(cpfUsuario);
+        ClienteDAO clienteDAO = new ClienteDAO();
+        List<Cliente> clientes = clienteDAO.listarPorUsuario(cpfUsuario);
 
         if (clientes.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Cadastre ao menos um cliente antes de simular.", "Erro", JOptionPane.ERROR_MESSAGE);
@@ -97,7 +99,7 @@ public class TelaSimulacaoEconomia extends JFrame {
         if (escolha == null) return;
 
         String cpfClienteSelecionado = escolha.substring(escolha.lastIndexOf(" - ") + 3).trim();
-        Cliente cliente = ServicoCadastroCliente.buscarClientePorCpfCliente(cpfUsuario, cpfClienteSelecionado);
+        Cliente cliente = clienteDAO.buscarPorCpfCliente(cpfUsuario, cpfClienteSelecionado);
 
         if (cliente == null || cliente.getEstado().isEmpty()) {
             JOptionPane.showMessageDialog(this, "Dados do cliente incompletos. Cadastre/atualize o endereço antes de simular.", "Erro", JOptionPane.ERROR_MESSAGE);
@@ -105,8 +107,9 @@ public class TelaSimulacaoEconomia extends JFrame {
         }
 
         SimulacaoEnergia simulacao = new SimulacaoEnergia(cliente.getEstado(), valorConta);
-        cliente.setSimulacao(simulacao);
-        ServicoCadastroCliente.atualizarCliente(cpfUsuario, cliente);
+
+        SimulacaoEnergiaDAO simulacaoDAO = new SimulacaoEnergiaDAO();
+        simulacaoDAO.cadastrar(simulacao, cliente.getId());
 
         String resultado = String.format(
                 "Consumo estimado: %.2f kWh/mês\n" +

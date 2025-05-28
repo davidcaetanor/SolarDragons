@@ -1,10 +1,47 @@
 package model;
 
 import service.ParametrosSistema;
+
 import java.util.HashMap;
 import java.util.Map;
 
 public class SimulacaoEnergia {
+    private static final double CUSTO_FIXO = 3000.0;             // Custo fixo da instalação
+    private static final double CUSTO_POR_KWP = 5000.0;          // Custo por kWp instalado
+    private static final double FATOR_ECONOMIA = 0.8;            // 80% de economia
+    private static final double PERCENTUAL_GERACAO = 0.95;       // Geração para cobrir 95% do consumo
+    private static final double POTENCIA_MODULO_KW = 0.555;      // 555 W por módulo
+    private static final double AREA_MODULO_M2 = 2.0;            // 2m² por módulo
+
+    private static final Map<String, Double> tarifaPorEstado = new HashMap<>() {{
+        put("AC", 1.10);
+        put("AL", 1.15);
+        put("AM", 1.25);
+        put("AP", 1.12);
+        put("BA", 1.14);
+        put("CE", 1.07);
+        put("DF", 1.10);
+        put("ES", 1.09);
+        put("GO", 1.17);
+        put("MA", 1.10);
+        put("MT", 1.13);
+        put("MS", 1.13);
+        put("MG", 1.07);
+        put("PA", 1.15);
+        put("PB", 1.09);
+        put("PR", 0.98);
+        put("PE", 1.10);
+        put("PI", 1.06);
+        put("RJ", 1.15);
+        put("RN", 1.14);
+        put("RO", 1.22);
+        put("RR", 1.18);
+        put("RS", 1.10);
+        put("SC", 0.99);
+        put("SE", 1.13);
+        put("SP", 1.07);
+        put("TO", 1.13);
+    }};
     private final double valorContaReais;
     private final double tarifa;
     private final double consumoEstimadoKwh;
@@ -16,44 +53,66 @@ public class SimulacaoEnergia {
     private final double areaNecessariaM2;
     private final double custoSistema;
 
-    private static final Map<String, Double> tarifaPorEstado = new HashMap<>() {{
-        put("AC", 0.89); put("AL", 0.90); put("AM", 0.94); put("AP", 0.91); put("BA", 0.93);
-        put("CE", 0.88); put("DF", 0.87); put("ES", 0.89); put("GO", 0.90); put("MA", 0.92);
-        put("MT", 0.86); put("MS", 0.85); put("MG", 0.88); put("PA", 0.91); put("PB", 0.89);
-        put("PR", 0.87); put("PE", 0.90); put("PI", 0.89); put("RJ", 0.92); put("RN", 0.88);
-        put("RO", 0.87); put("RR", 0.90); put("RS", 0.89); put("SC", 0.88); put("SE", 0.89);
-        put("SP", 0.89); put("TO", 0.90);
-    }};
-
     public SimulacaoEnergia(String estado, double valorContaReais) {
         this.valorContaReais = valorContaReais;
-        this.tarifa = tarifaPorEstado.getOrDefault(estado.toUpperCase(), 0.90);
-        this.consumoEstimadoKwh = valorContaReais / tarifa;
+        this.tarifa = tarifaPorEstado.getOrDefault(estado.toUpperCase(), 1.10);
 
-        double percentualGeracao = ParametrosSistema.getPercentualGeracao();
-        double custoPorKw = ParametrosSistema.getCustoPorKw();
-        double fatorEconomia = ParametrosSistema.getFatorEconomia();
+        this.consumoEstimadoKwh = valorContaReais / this.tarifa;
 
-        this.geracaoEstimadaKwh = consumoEstimadoKwh * percentualGeracao;
-        this.potenciaSistemaKw = consumoEstimadoKwh / 108.0;
-        this.quantidadeModulos = (int) Math.ceil(potenciaSistemaKw / 0.555);
-        this.areaNecessariaM2 = quantidadeModulos * 3.375;
+        this.geracaoEstimadaKwh = consumoEstimadoKwh * PERCENTUAL_GERACAO;
 
-        this.custoSistema = potenciaSistemaKw * custoPorKw;
-        this.economiaMensal = geracaoEstimadaKwh * tarifa * fatorEconomia;
+        double producaoMediaKwhPorKwp = 135.0;
+        this.potenciaSistemaKw = geracaoEstimadaKwh / producaoMediaKwhPorKwp;
+
+        this.quantidadeModulos = (int) Math.ceil(potenciaSistemaKw / POTENCIA_MODULO_KW);
+
+        this.areaNecessariaM2 = quantidadeModulos * AREA_MODULO_M2;
+
+        this.custoSistema = CUSTO_FIXO + (potenciaSistemaKw * CUSTO_POR_KWP);
+
+        this.economiaMensal = (this.tarifa * this.geracaoEstimadaKwh) * FATOR_ECONOMIA;
         this.economiaAnual = economiaMensal * 12;
     }
 
-    public double getValorContaReais() { return valorContaReais; }
-    public double getTarifa() { return tarifa; }
-    public double getConsumoEstimadoKwh() { return consumoEstimadoKwh; }
-    public double getGeracaoEstimadaKwh() { return geracaoEstimadaKwh; }
-    public double getEconomiaMensal() { return economiaMensal; }
-    public double getEconomiaAnual() { return economiaAnual; }
-    public double getPotenciaSistemaKw() { return potenciaSistemaKw; }
-    public int getQuantidadeModulos() { return quantidadeModulos; }
-    public double getAreaNecessariaM2() { return areaNecessariaM2; }
-    public double getCustoSistema() { return custoSistema; }
+    public double getValorContaReais() {
+        return valorContaReais;
+    }
+
+    public double getTarifa() {
+        return tarifa;
+    }
+
+    public double getConsumoEstimadoKwh() {
+        return consumoEstimadoKwh;
+    }
+
+    public double getGeracaoEstimadaKwh() {
+        return geracaoEstimadaKwh;
+    }
+
+    public double getEconomiaMensal() {
+        return economiaMensal;
+    }
+
+    public double getEconomiaAnual() {
+        return economiaAnual;
+    }
+
+    public double getPotenciaSistemaKw() {
+        return potenciaSistemaKw;
+    }
+
+    public int getQuantidadeModulos() {
+        return quantidadeModulos;
+    }
+
+    public double getAreaNecessariaM2() {
+        return areaNecessariaM2;
+    }
+
+    public double getCustoSistema() {
+        return custoSistema;
+    }
 
     public double getPaybackAnos() {
         if (economiaAnual <= 0) return -1;

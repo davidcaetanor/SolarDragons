@@ -97,4 +97,46 @@ public class UsuarioDAO {
                 rs.getBoolean("raiz")
         );
     }
+
+    public boolean cpfExiste(String cpf) {
+        String sql = "SELECT 1 FROM usuario WHERE cpf = ?";
+        try (Connection conn = ConexaoMySQL.getConexao();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, cpf);
+            ResultSet rs = stmt.executeQuery();
+            return rs.next();
+        } catch (SQLException e) {
+            System.out.println("Erro ao verificar CPF: " + e.getMessage());
+            return false;
+        }
+    }
+
+    public boolean emailExiste(String email) {
+        String sql = "SELECT 1 FROM usuario WHERE email = ?";
+        try (Connection conn = ConexaoMySQL.getConexao();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, email);
+            ResultSet rs = stmt.executeQuery();
+            return rs.next();
+        } catch (SQLException e) {
+            System.out.println("Erro ao verificar email: " + e.getMessage());
+            return false;
+        }
+    }
+
+    public Usuario buscarPorCpf(String cpf) {
+        String sql = "SELECT * FROM usuario WHERE cpf = ?";
+        try (Connection conn = ConexaoMySQL.getConexao();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, cpf);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return construirUsuario(rs);
+            }
+        } catch (SQLException e) {
+            System.out.println("Erro ao buscar usuário por CPF: " + e.getMessage());
+        }
+        return null;
+    }
+
 }

@@ -31,9 +31,24 @@ public class SimulacaoEnergiaDAO {
         }
     }
 
+    public SimulacaoEnergia buscarUltimaSimulacao(int clienteId) {
+        String sql = "SELECT * FROM simulacao_energia WHERE cliente_id = ? ORDER BY data_simulacao DESC LIMIT 1";
+        try (Connection conn = ConexaoMySQL.getConexao();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, clienteId);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return construirSimulacao(rs);
+            }
+        } catch (SQLException e) {
+            System.out.println("Erro ao buscar simulação: " + e.getMessage());
+        }
+        return null;
+    }
+
     public List<SimulacaoEnergia> listarPorCliente(int clienteId) {
         List<SimulacaoEnergia> lista = new ArrayList<>();
-        String sql = "SELECT * FROM simulacao_energia WHERE cliente_id = ?";
+        String sql = "SELECT * FROM simulacao_energia WHERE cliente_id = ? ORDER BY data_simulacao DESC";
         try (Connection conn = ConexaoMySQL.getConexao();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, clienteId);
@@ -48,10 +63,9 @@ public class SimulacaoEnergiaDAO {
     }
 
     private SimulacaoEnergia construirSimulacao(ResultSet rs) throws SQLException {
-        return new SimulacaoEnergia(
-                "",
-                rs.getDouble("valor_conta_reais")
-        );
 
+        double valorConta = rs.getDouble("valor_conta_reais");
+        SimulacaoEnergia s = new SimulacaoEnergia("", valorConta);
+        return s;
     }
 }

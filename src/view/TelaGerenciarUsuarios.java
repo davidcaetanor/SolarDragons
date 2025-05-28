@@ -1,7 +1,7 @@
 package view;
 
 import model.Usuario;
-import service.AutenticacaoUser;
+import database.UsuarioDAO;
 import service.SessaoUsuario;
 
 import javax.swing.*;
@@ -61,7 +61,8 @@ public class TelaGerenciarUsuarios extends JFrame {
 
     private void atualizarTabela() {
         tableModel.setRowCount(0);
-        List<Usuario> usuarios = AutenticacaoUser.listarUsuarios();
+        UsuarioDAO usuarioDAO = new UsuarioDAO();
+        List<Usuario> usuarios = usuarioDAO.listar();
         for (Usuario u : usuarios) {
             tableModel.addRow(new Object[]{
                     u.getNome(), u.getCpf(), u.getEmail(),
@@ -78,32 +79,36 @@ public class TelaGerenciarUsuarios extends JFrame {
             return;
         }
         String cpf = (String) tableModel.getValueAt(linha, 1);
-        List<Usuario> usuarios = AutenticacaoUser.listarUsuarios();
-        for (Usuario u : usuarios) {
-            if (u.getCpf().equals(cpf)) {
-                // Só o ADM raiz pode promover/demitir outros ADMs
-                if (!admRoot && u.isAdmin()) {
-                    JOptionPane.showMessageDialog(this, "Apenas o ADM raiz pode alterar privilégios de outros ADMs.", "Acesso negado", JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
-                if (u.isRootAdmin()) {
-                    JOptionPane.showMessageDialog(this, "O ADM raiz não pode ser rebaixado!", "Acesso negado", JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
-                if (u.isAdmin()) {
-                    int confirm = JOptionPane.showConfirmDialog(this, "Deseja remover os privilégios de ADM deste usuário?", "Confirmação", JOptionPane.YES_NO_OPTION);
-                    if (confirm == JOptionPane.YES_OPTION) {
-                        u.setAdmin(false);
-                        atualizarTabela();
-                    }
-                } else {
-                    int confirm = JOptionPane.showConfirmDialog(this, "Deseja promover este usuário a ADM?", "Confirmação", JOptionPane.YES_NO_OPTION);
-                    if (confirm == JOptionPane.YES_OPTION) {
-                        u.setAdmin(true);
-                        atualizarTabela();
-                    }
-                }
-                return;
+        UsuarioDAO usuarioDAO = new UsuarioDAO();
+        Usuario u = usuarioDAO.buscarPorCpf(cpf);
+
+        if (u == null) {
+            JOptionPane.showMessageDialog(this, "Usuário não encontrado!", "Erro", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        // Só o ADM raiz pode promover/demitir outros ADMs
+        if (!admRoot && u.isAdmin()) {
+            JOptionPane.showMessageDialog(this, "Apenas o ADM raiz pode alterar privilégios de outros ADMs.", "Acesso negado", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        if (u.isRootAdmin()) {
+            JOptionPane.showMessageDialog(this, "O ADM raiz não pode ser rebaixado!", "Acesso negado", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        if (u.isAdmin()) {
+            int confirm = JOptionPane.showConfirmDialog(this, "Deseja remover os privilégios de ADM deste usuário?", "Confirmação", JOptionPane.YES_NO_OPTION);
+            if (confirm == JOptionPane.YES_OPTION) {
+                u.setAdmin(false);
+                usuarioDAO.atualizar(u);
+                atualizarTabela();
+            }
+        } else {
+            int confirm = JOptionPane.showConfirmDialog(this, "Deseja promover este usuário a ADM?", "Confirmação", JOptionPane.YES_NO_OPTION);
+            if (confirm == JOptionPane.YES_OPTION) {
+                u.setAdmin(true);
+                usuarioDAO.atualizar(u);
+                atualizarTabela();
             }
         }
     }
@@ -120,29 +125,28 @@ public class TelaGerenciarUsuarios extends JFrame {
             JOptionPane.showMessageDialog(this, "Você não pode remover a si mesmo!", "Erro", JOptionPane.ERROR_MESSAGE);
             return;
         }
-        List<Usuario> usuarios = AutenticacaoUser.listarUsuarios();
-        Usuario paraRemover = null;
-        for (Usuario u : usuarios) {
-            if (u.getCpf().equals(cpf)) {
-                if (u.isRootAdmin()) {
-                    JOptionPane.showMessageDialog(this, "O ADM raiz não pode ser removido!", "Acesso negado", JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
 
-                if (u.isAdmin() && !admRoot) {
-                    JOptionPane.showMessageDialog(this, "Apenas o ADM raiz pode remover outros ADMs.", "Acesso negado", JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
-                paraRemover = u;
-                break;
-            }
+        UsuarioDAO usuarioDAO = new UsuarioDAO();
+        Usuario u = usuarioDAO.buscarPorCpf(cpf);
+
+        if (u == null) {
+            JOptionPane.showMessageDialog(this, "Usuário não encontrado!", "Erro", JOptionPane.ERROR_MESSAGE);
+            return;
         }
-        if (paraRemover != null) {
-            int confirm = JOptionPane.showConfirmDialog(this, "Deseja remover este usuário?", "Confirmar Exclusão", JOptionPane.YES_NO_OPTION);
-            if (confirm == JOptionPane.YES_OPTION) {
-                usuarios.remove(paraRemover);
-                atualizarTabela();
-            }
+
+        if (u.isRootAdmin()) {
+            JOptionPane.showMessageDialog(this, "O ADM raiz não pode ser removido!", "Acesso negado", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        if (u.isAdmin() && !admRoot) {
+            JOptionPane.showMessageDialog(this, "Apenas o ADM raiz pode remover outros ADMs.", "Acesso negado", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        int confirm = JOptionPane.showConfirmDialog(this, "Deseja remover este usuário?", "Confirmar Exclusão", JOptionPane.YES_NO_OPTION);
+        if (confirm == JOptionPane.YES_OPTION) {
+            usuarioDAO.remover(cpf);
+            atualizarTabela();
         }
     }
 }

@@ -2,8 +2,9 @@ package view;
 
 import model.Cliente;
 import model.Usuario;
-import service.AutenticacaoUser;
-import service.ServicoCadastroCliente;
+import database.UsuarioDAO;
+import database.ClienteDAO;
+
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.util.List;
@@ -53,9 +54,12 @@ public class TelaADMClientes extends JFrame {
 
     private void atualizarTabela() {
         tableModel.setRowCount(0);
-        List<Usuario> usuarios = AutenticacaoUser.listarUsuarios();
+        UsuarioDAO usuarioDAO = new UsuarioDAO();
+        ClienteDAO clienteDAO = new ClienteDAO();
+        List<Usuario> usuarios = usuarioDAO.listar();
+
         for (Usuario usuario : usuarios) {
-            List<Cliente> clientes = ServicoCadastroCliente.listarClientesDoUsuario(usuario.getCpf());
+            List<Cliente> clientes = clienteDAO.listarPorUsuario(usuario.getCpf());
             for (Cliente c : clientes) {
                 tableModel.addRow(new Object[]{
                         c.getNome(), c.getCpf(), c.getEmail(), c.getCidade(), c.getEstado(), usuario.getNome()
@@ -73,10 +77,12 @@ public class TelaADMClientes extends JFrame {
         String cpfCliente = (String) tableModel.getValueAt(linha, 1);
         String usuarioNome = (String) tableModel.getValueAt(linha, 5);
 
-        List<Usuario> usuarios = AutenticacaoUser.listarUsuarios();
+        UsuarioDAO usuarioDAO = new UsuarioDAO();
+        ClienteDAO clienteDAO = new ClienteDAO();
+        List<Usuario> usuarios = usuarioDAO.listar();
         for (Usuario usuario : usuarios) {
             if (usuario.getNome().equals(usuarioNome)) {
-                ServicoCadastroCliente.removerCliente(usuario.getCpf(), cpfCliente);
+                clienteDAO.remover(usuario.getCpf(), cpfCliente);
                 break;
             }
         }

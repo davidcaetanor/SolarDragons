@@ -2,8 +2,10 @@ package view;
 
 import model.Usuario;
 import model.Cliente;
-import service.AutenticacaoUser;
-import service.ServicoCadastroCliente;
+import model.SimulacaoEnergia;
+import database.UsuarioDAO;
+import database.ClienteDAO;
+import database.SimulacaoEnergiaDAO;
 
 import javax.swing.*;
 import java.awt.*;
@@ -17,19 +19,25 @@ public class TelaEstatisticasGlobais extends JFrame {
         setLocationRelativeTo(null);
         setLayout(new BorderLayout());
 
-        List<Usuario> usuarios = AutenticacaoUser.listarUsuarios();
+        UsuarioDAO usuarioDAO = new UsuarioDAO();
+        ClienteDAO clienteDAO = new ClienteDAO();
+        SimulacaoEnergiaDAO simulacaoDAO = new SimulacaoEnergiaDAO();
+
+        List<Usuario> usuarios = usuarioDAO.listar();
         int totalUsuarios = usuarios.size();
         int totalClientes = 0;
         double economiaTotal = 0;
         int totalSimulacoes = 0;
 
         for (Usuario usuario : usuarios) {
-            List<Cliente> clientes = ServicoCadastroCliente.listarClientesDoUsuario(usuario.getCpf());
+            List<Cliente> clientes = clienteDAO.listarPorUsuario(usuario.getCpf());
             totalClientes += clientes.size();
             for (Cliente c : clientes) {
-                if (c.getSimulacao() != null) {
-                    totalSimulacoes++;
-                    economiaTotal += c.getSimulacao().getEconomiaAnual() * 5;
+
+                List<SimulacaoEnergia> simulacoes = simulacaoDAO.listarPorCliente(c.getId());
+                totalSimulacoes += simulacoes.size();
+                for (SimulacaoEnergia s : simulacoes) {
+                    economiaTotal += s.getEconomiaAnual() * 5;
                 }
             }
         }

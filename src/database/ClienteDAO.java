@@ -107,6 +107,7 @@ public class ClienteDAO {
         c.setCidade(rs.getString("cidade"));
         c.setEstado(rs.getString("estado"));
         c.setCep(rs.getString("cep"));
+        c.setId(rs.getInt("id"));
         return c;
     }
 }
