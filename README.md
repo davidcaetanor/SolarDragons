@@ -1,11 +1,11 @@
 # SolarDragons - Simulador de Economia com Energia Solar
 
-**Projeto TCM - Simulador de Economia com Energia Solar Residencial**  
+**Projeto TCM - Simulador de Economia com Energia Solar **  
 Professor: Túlio Cearamicoli Vivaldini
 
 ## Sobre o Projeto
 
-Este sistema simula a economia gerada pelo uso de energia solar em residências. 
+Este sistema simula a economia gerada pelo uso de energia solar em locais. 
 O usuário consegue cadastrar dados para complementar como (nome, CPF, endereço completo, consumo mensal, tarifa) e visualizar a economia estimada, incluindo o retorno sobre o investimento (payback).
 
 ## Funcionalidades
