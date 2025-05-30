@@ -20,25 +20,25 @@ public class TelaLogin extends JFrame {
         setLocationRelativeTo(null);
         setResizable(true);
 
-        // Layout dinâmico
+
         setLayout(new GridBagLayout());
         GridBagConstraints c = new GridBagConstraints();
         EstiloSolarDragons.aplicarFundo(getContentPane());
 
-        // Logo
+
         JLabel logo = EstiloSolarDragons.criarLogo(
                 350, 350, "C:\\Users\\david\\IdeaProjects\\SolarDragons\\src\\resources\\iconSolarDragons.png");
         c.gridx = 0; c.gridy = 0; c.insets = new Insets(20,0,20,0);
         add(logo, c);
 
-        // Título
+
         JLabel titulo = new JLabel("SolarDragons");
         titulo.setFont(EstiloSolarDragons.TITULO);
         titulo.setForeground(EstiloSolarDragons.AZUL_ESCURO);
         c.gridy = 1; c.insets = new Insets(0,0,25,0);
         add(titulo, c);
 
-        // CPF
+
         JLabel cpfLabel = new JLabel("CPF:");
         cpfLabel.setFont(EstiloSolarDragons.LABEL);
         cpfLabel.setForeground(EstiloSolarDragons.AZUL_ESCURO);
@@ -51,7 +51,7 @@ public class TelaLogin extends JFrame {
         c.fill = GridBagConstraints.HORIZONTAL;
         add(campoCpf, c);
 
-        // Senha
+
         JLabel senhaLabel = new JLabel("Senha:");
         senhaLabel.setFont(EstiloSolarDragons.LABEL);
         senhaLabel.setForeground(EstiloSolarDragons.AZUL_ESCURO);
@@ -64,7 +64,7 @@ public class TelaLogin extends JFrame {
         c.fill = GridBagConstraints.HORIZONTAL;
         add(campoSenha, c);
 
-        // Painel dos botões
+        
         JPanel painelBotoes = new JPanel(new FlowLayout(FlowLayout.CENTER, 15, 0));
         EstiloSolarDragons.aplicarFundo(painelBotoes);
 
