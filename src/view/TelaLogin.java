@@ -1,6 +1,5 @@
 package view;
 
-import util.EstiloSolarDragons;
 import model.Usuario;
 import database.UsuarioDAO;
 import service.SessaoUsuario;
@@ -16,8 +15,8 @@ public class TelaLogin extends JFrame {
     public TelaLogin() {
         setTitle("SolarDragons - Login");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(500, 600);
-        setMinimumSize(new Dimension(450, 500));
+        setSize(450, 680);
+        setMinimumSize(new Dimension(450, 700));
         setLocationRelativeTo(null);
         setResizable(true);
 

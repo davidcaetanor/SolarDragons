@@ -1,11 +1,11 @@
-package util;
+package view;
 
 import javax.swing.*;
 import java.awt.*;
 
 public class EstiloSolarDragons {
 
-
+    // Cores extraídas do fundo e logo
     public static final Color FUNDO_BEGE = new Color(248, 241, 227); // igual ao fundo do logo
     public static final Color AZUL_ESCURO = new Color(29, 40, 56);   // Azul profundo do logo
     public static final Color CINZA_CAMPO = new Color(246, 242, 230); // campos de texto
