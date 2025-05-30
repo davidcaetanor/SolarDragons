@@ -1,49 +1,89 @@
 package view;
 
+import util.EstiloSolarDragons;
 import model.Usuario;
 import database.UsuarioDAO;
 import service.SessaoUsuario;
 
 import javax.swing.*;
-
+import java.awt.*;
 
 public class TelaLogin extends JFrame {
-
     private JTextField campoCpf;
     private JPasswordField campoSenha;
-    private JButton botaoEntrar;
-    private JButton botaoCadastrar;
+    private JButton botaoEntrar, botaoCadastrar;
 
     public TelaLogin() {
         setTitle("SolarDragons - Login");
-        setSize(350, 220);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setSize(500, 600);
+        setMinimumSize(new Dimension(450, 500));
         setLocationRelativeTo(null);
-        setLayout(null);
+        setResizable(true);
 
-        JLabel labelCpf = new JLabel("CPF:");
-        labelCpf.setBounds(40, 30, 80, 25);
-        add(labelCpf);
+        // Layout dinâmico
+        setLayout(new GridBagLayout());
+        GridBagConstraints c = new GridBagConstraints();
+        EstiloSolarDragons.aplicarFundo(getContentPane());
 
-        campoCpf = new JTextField();
-        campoCpf.setBounds(120, 30, 150, 25);
-        add(campoCpf);
+        // Logo
+        JLabel logo = EstiloSolarDragons.criarLogo(
+                350, 350, "C:\\Users\\david\\IdeaProjects\\SolarDragons\\src\\resources\\iconSolarDragons.png");
+        c.gridx = 0; c.gridy = 0; c.insets = new Insets(20,0,20,0);
+        add(logo, c);
 
-        JLabel labelSenha = new JLabel("Senha:");
-        labelSenha.setBounds(40, 70, 80, 25);
-        add(labelSenha);
+        // Título
+        JLabel titulo = new JLabel("SolarDragons");
+        titulo.setFont(EstiloSolarDragons.TITULO);
+        titulo.setForeground(EstiloSolarDragons.AZUL_ESCURO);
+        c.gridy = 1; c.insets = new Insets(0,0,25,0);
+        add(titulo, c);
 
-        campoSenha = new JPasswordField();
-        campoSenha.setBounds(120, 70, 150, 25);
-        add(campoSenha);
+        // CPF
+        JLabel cpfLabel = new JLabel("CPF:");
+        cpfLabel.setFont(EstiloSolarDragons.LABEL);
+        cpfLabel.setForeground(EstiloSolarDragons.AZUL_ESCURO);
+        c.gridy = 2; c.anchor = GridBagConstraints.WEST; c.insets = new Insets(0,50,5,50);
+        add(cpfLabel, c);
+
+        campoCpf = new JTextField(20);
+        EstiloSolarDragons.estilizarCampo(campoCpf);
+        c.gridy = 3; c.insets = new Insets(0,50,15,50);
+        c.fill = GridBagConstraints.HORIZONTAL;
+        add(campoCpf, c);
+
+        // Senha
+        JLabel senhaLabel = new JLabel("Senha:");
+        senhaLabel.setFont(EstiloSolarDragons.LABEL);
+        senhaLabel.setForeground(EstiloSolarDragons.AZUL_ESCURO);
+        c.gridy = 4; c.insets = new Insets(0,50,5,50); c.fill = GridBagConstraints.NONE;
+        add(senhaLabel, c);
+
+        campoSenha = new JPasswordField(20);
+        EstiloSolarDragons.estilizarCampo(campoSenha);
+        c.gridy = 5; c.insets = new Insets(0,50,20,50);
+        c.fill = GridBagConstraints.HORIZONTAL;
+        add(campoSenha, c);
+
+        // Painel dos botões
+        JPanel painelBotoes = new JPanel(new FlowLayout(FlowLayout.CENTER, 15, 0));
+        EstiloSolarDragons.aplicarFundo(painelBotoes);
 
         botaoEntrar = new JButton("Entrar");
-        botaoEntrar.setBounds(60, 120, 90, 30);
-        add(botaoEntrar);
+        EstiloSolarDragons.estilizarBotaoPrincipal(botaoEntrar);
 
         botaoCadastrar = new JButton("Cadastrar");
-        botaoCadastrar.setBounds(170, 120, 100, 30);
-        add(botaoCadastrar);
+        EstiloSolarDragons.estilizarBotaoSecundario(botaoCadastrar);
+
+        Dimension botaoSize = new Dimension(130, 40);
+        botaoEntrar.setPreferredSize(botaoSize);
+        botaoCadastrar.setPreferredSize(botaoSize);
+
+        painelBotoes.add(botaoEntrar);
+        painelBotoes.add(botaoCadastrar);
+
+        c.gridy = 6; c.insets = new Insets(10,0,20,0);
+        add(painelBotoes, c);
 
         botaoEntrar.addActionListener(e -> realizarLogin());
         botaoCadastrar.addActionListener(e -> {
