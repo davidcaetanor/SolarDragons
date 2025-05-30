@@ -1,9 +1,11 @@
 package view;
 
-import model.Usuario;
+
 import service.SessaoUsuario;
+import model.Usuario;
 
 import javax.swing.*;
+import java.awt.*;
 
 public class TelaMeusDados extends JFrame {
     private JTextField campoNome, campoEmail, campoCpf;
@@ -15,63 +17,102 @@ public class TelaMeusDados extends JFrame {
         this.telaPrincipal = telaPrincipal;
 
         setTitle("Meus Dados");
-        setSize(400, 360);
+        setSize(450, 500);
+        setMinimumSize(new Dimension(420, 450));
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
-        setLayout(null);
+        setResizable(true);
+
+        setLayout(new GridBagLayout());
+        GridBagConstraints c = new GridBagConstraints();
+        EstiloSolarDragons.aplicarFundo(getContentPane());
+
+        // Logo
+        JLabel logo = EstiloSolarDragons.criarLogo(
+                80, 80, "C:\\Users\\david\\IdeaProjects\\SolarDragons\\src\\resources\\iconSolarDragons.png");
+        c.gridx = 0; c.gridy = 0; c.insets = new Insets(20,0,10,0);
+        add(logo, c);
 
         Usuario usuario = SessaoUsuario.getUsuarioLogado();
 
         JLabel labelCpf = new JLabel("CPF:");
-        labelCpf.setBounds(40, 30, 80, 25);
-        add(labelCpf);
+        labelCpf.setFont(EstiloSolarDragons.LABEL);
+        labelCpf.setForeground(EstiloSolarDragons.AZUL_ESCURO);
+        c.gridy = 1; c.insets = new Insets(0,50,4,50); c.anchor = GridBagConstraints.WEST;
+        add(labelCpf, c);
+
         campoCpf = new JTextField(usuario.getCpf());
-        campoCpf.setBounds(130, 30, 200, 25);
+        EstiloSolarDragons.estilizarCampo(campoCpf);
         campoCpf.setEditable(false);
-        add(campoCpf);
+        c.gridy = 2; c.insets = new Insets(0,50,10,50); c.fill = GridBagConstraints.HORIZONTAL;
+        add(campoCpf, c);
 
         JLabel labelNome = new JLabel("Nome:");
-        labelNome.setBounds(40, 70, 80, 25);
-        add(labelNome);
+        labelNome.setFont(EstiloSolarDragons.LABEL);
+        labelNome.setForeground(EstiloSolarDragons.AZUL_ESCURO);
+        c.gridy = 3; c.insets = new Insets(0,50,4,50);
+        add(labelNome, c);
         campoNome = new JTextField(usuario.getNome());
-        campoNome.setBounds(130, 70, 200, 25);
-        add(campoNome);
+        EstiloSolarDragons.estilizarCampo(campoNome);
+        c.gridy = 4; c.insets = new Insets(0,50,10,50);
+        add(campoNome, c);
 
         JLabel labelEmail = new JLabel("Email:");
-        labelEmail.setBounds(40, 110, 80, 25);
-        add(labelEmail);
+        labelEmail.setFont(EstiloSolarDragons.LABEL);
+        labelEmail.setForeground(EstiloSolarDragons.AZUL_ESCURO);
+        c.gridy = 5; c.insets = new Insets(0,50,4,50);
+        add(labelEmail, c);
         campoEmail = new JTextField(usuario.getEmail());
-        campoEmail.setBounds(130, 110, 200, 25);
-        add(campoEmail);
+        EstiloSolarDragons.estilizarCampo(campoEmail);
+        c.gridy = 6; c.insets = new Insets(0,50,10,50);
+        add(campoEmail, c);
 
         JLabel labelSenhaAntiga = new JLabel("Senha Atual:");
-        labelSenhaAntiga.setBounds(30, 150, 100, 25);
-        add(labelSenhaAntiga);
+        labelSenhaAntiga.setFont(EstiloSolarDragons.LABEL);
+        labelSenhaAntiga.setForeground(EstiloSolarDragons.AZUL_ESCURO);
+        c.gridy = 7; c.insets = new Insets(0,50,4,50);
+        add(labelSenhaAntiga, c);
         campoSenhaAntiga = new JPasswordField();
-        campoSenhaAntiga.setBounds(130, 150, 200, 25);
-        add(campoSenhaAntiga);
+        EstiloSolarDragons.estilizarCampo(campoSenhaAntiga);
+        c.gridy = 8; c.insets = new Insets(0,50,10,50);
+        add(campoSenhaAntiga, c);
 
         JLabel labelSenhaNova = new JLabel("Nova Senha:");
-        labelSenhaNova.setBounds(30, 190, 100, 25);
-        add(labelSenhaNova);
+        labelSenhaNova.setFont(EstiloSolarDragons.LABEL);
+        labelSenhaNova.setForeground(EstiloSolarDragons.AZUL_ESCURO);
+        c.gridy = 9; c.insets = new Insets(0,50,4,50);
+        add(labelSenhaNova, c);
         campoSenhaNova = new JPasswordField();
-        campoSenhaNova.setBounds(130, 190, 200, 25);
-        add(campoSenhaNova);
+        EstiloSolarDragons.estilizarCampo(campoSenhaNova);
+        c.gridy = 10; c.insets = new Insets(0,50,10,50);
+        add(campoSenhaNova, c);
 
         JLabel labelSenhaConfirma = new JLabel("Confirmar Nova:");
-        labelSenhaConfirma.setBounds(10, 230, 120, 25);
-        add(labelSenhaConfirma);
+        labelSenhaConfirma.setFont(EstiloSolarDragons.LABEL);
+        labelSenhaConfirma.setForeground(EstiloSolarDragons.AZUL_ESCURO);
+        c.gridy = 11; c.insets = new Insets(0,50,4,50);
+        add(labelSenhaConfirma, c);
         campoSenhaConfirma = new JPasswordField();
-        campoSenhaConfirma.setBounds(130, 230, 200, 25);
-        add(campoSenhaConfirma);
+        EstiloSolarDragons.estilizarCampo(campoSenhaConfirma);
+        c.gridy = 12; c.insets = new Insets(0,50,16,50);
+        add(campoSenhaConfirma, c);
+
+        JPanel painelBotoes = new JPanel(new FlowLayout(FlowLayout.CENTER, 16, 0));
+        EstiloSolarDragons.aplicarFundo(painelBotoes);
 
         botaoSalvar = new JButton("Salvar");
-        botaoSalvar.setBounds(70, 280, 100, 30);
-        add(botaoSalvar);
-
+        EstiloSolarDragons.estilizarBotaoPrincipal(botaoSalvar);
         botaoCancelar = new JButton("Cancelar");
-        botaoCancelar.setBounds(200, 280, 100, 30);
-        add(botaoCancelar);
+        EstiloSolarDragons.estilizarBotaoSecundario(botaoCancelar);
+        Dimension botaoSize = new Dimension(120, 36);
+        botaoSalvar.setPreferredSize(botaoSize);
+        botaoCancelar.setPreferredSize(botaoSize);
+
+        painelBotoes.add(botaoSalvar);
+        painelBotoes.add(botaoCancelar);
+
+        c.gridy = 13; c.insets = new Insets(10,0,20,0);
+        add(painelBotoes, c);
 
         botaoSalvar.addActionListener(e -> salvar());
         botaoCancelar.addActionListener(e -> cancelar());

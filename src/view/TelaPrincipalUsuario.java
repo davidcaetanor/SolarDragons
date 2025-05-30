@@ -1,9 +1,11 @@
 package view;
 
-import database.ClienteDAO;
+
 import service.SessaoUsuario;
+import database.ClienteDAO;
 
 import javax.swing.*;
+import java.awt.*;
 
 public class TelaPrincipalUsuario extends JFrame {
 
@@ -11,44 +13,71 @@ public class TelaPrincipalUsuario extends JFrame {
 
     public TelaPrincipalUsuario() {
         setTitle("Painel do Usuário - SolarDragons");
-        setSize(400, 360);
+        setSize(500, 600);
+        setMinimumSize(new Dimension(450, 600));
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
-        setLayout(null);
+        setResizable(true);
+
+        setLayout(new GridBagLayout());
+        GridBagConstraints c = new GridBagConstraints();
+        EstiloSolarDragons.aplicarFundo(getContentPane());
+
+
+        JLabel logo = EstiloSolarDragons.criarLogo(
+                120, 120, "C:\\Users\\david\\IdeaProjects\\SolarDragons\\src\\resources\\iconSolarDragons.png");
+        c.gridx = 0; c.gridy = 0; c.insets = new Insets(18,0,6,0);
+        add(logo, c);
 
         saudacao = new JLabel("Bem-vindo, " + SessaoUsuario.getUsuarioLogado().getNome() + "!");
-        saudacao.setBounds(60, 20, 300, 30);
-        add(saudacao);
+        saudacao.setFont(EstiloSolarDragons.TITULO);
+        saudacao.setForeground(EstiloSolarDragons.AZUL_ESCURO);
+        c.gridy = 1; c.insets = new Insets(4,0,24,0);
+        add(saudacao, c);
+
+        // Painel de botões principais
+        JPanel painelBotoes = new JPanel(new GridLayout(6, 1, 0, 18));
+        EstiloSolarDragons.aplicarFundo(painelBotoes);
 
         JButton botaoMeusDados = new JButton("Meus Dados");
-        botaoMeusDados.setBounds(120, 60, 150, 30);
-        add(botaoMeusDados);
+        EstiloSolarDragons.estilizarBotaoSecundario(botaoMeusDados);
+        painelBotoes.add(botaoMeusDados);
 
         JButton botaoSimular = new JButton("Simular Economia");
-        botaoSimular.setBounds(120, 100, 150, 30);
-        add(botaoSimular);
+        EstiloSolarDragons.estilizarBotaoPrincipal(botaoSimular);
+        painelBotoes.add(botaoSimular);
 
         JButton botaoVerDados = new JButton("Gerenciar Clientes");
-        botaoVerDados.setBounds(120, 140, 150, 30);
-        add(botaoVerDados);
+        EstiloSolarDragons.estilizarBotaoSecundario(botaoVerDados);
+        painelBotoes.add(botaoVerDados);
 
         JButton botaoGrafico = new JButton("Ver Gráfico");
-        botaoGrafico.setBounds(120, 180, 150, 30);
-        add(botaoGrafico);
+        EstiloSolarDragons.estilizarBotaoSecundario(botaoGrafico);
+        painelBotoes.add(botaoGrafico);
 
         JButton botaoExportar = new JButton("Exportar Relatório");
-        botaoExportar.setBounds(120, 220, 150, 30);
-        add(botaoExportar);
+        EstiloSolarDragons.estilizarBotaoSecundario(botaoExportar);
+        painelBotoes.add(botaoExportar);
 
         JButton botaoSair = new JButton("Sair");
-        botaoSair.setBounds(120, 260, 150, 30);
-        add(botaoSair);
+        EstiloSolarDragons.estilizarBotaoPrincipal(botaoSair);
+        painelBotoes.add(botaoSair);
+
+        // Tamanho dos botões igual
+        Dimension botaoSize = new Dimension(200, 40);
+        for (Component comp : painelBotoes.getComponents()) {
+            if (comp instanceof JButton) {
+                ((JButton) comp).setPreferredSize(botaoSize);
+            }
+        }
+
+        c.gridy = 2; c.insets = new Insets(4,0,20,0); c.fill = GridBagConstraints.HORIZONTAL;
+        add(painelBotoes, c);
 
         botaoMeusDados.addActionListener(e -> {
             new TelaMeusDados(this);
             setVisible(false);
         });
-
         botaoSimular.addActionListener(e -> {
             String cpf = SessaoUsuario.getUsuarioLogado().getCpf();
             ClienteDAO clienteDAO = new ClienteDAO();
@@ -63,20 +92,16 @@ public class TelaPrincipalUsuario extends JFrame {
                 new TelaSimulacaoEconomia();
             }
         });
-
         botaoVerDados.addActionListener(e -> {
             dispose();
             new TelaGerenciarClientes();
         });
-
         botaoGrafico.addActionListener(e -> {
             GraficoEconomia.exibirGraficoEconomia();
         });
-
         botaoExportar.addActionListener(e -> {
             JOptionPane.showMessageDialog(this, "Função em desenvolvimento! Exportação será implementada em breve.", "Info", JOptionPane.INFORMATION_MESSAGE);
         });
-
         botaoSair.addActionListener(e -> {
             SessaoUsuario.logout();
             dispose();

@@ -15,7 +15,6 @@ public class TelaLogin extends JFrame {
     public TelaLogin() {
         setTitle("SolarDragons - Login");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(450, 680);
         setMinimumSize(new Dimension(450, 700));
         setLocationRelativeTo(null);
         setResizable(true);
@@ -64,7 +63,7 @@ public class TelaLogin extends JFrame {
         c.fill = GridBagConstraints.HORIZONTAL;
         add(campoSenha, c);
 
-        
+
         JPanel painelBotoes = new JPanel(new FlowLayout(FlowLayout.CENTER, 15, 0));
         EstiloSolarDragons.aplicarFundo(painelBotoes);
 

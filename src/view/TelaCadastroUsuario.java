@@ -1,74 +1,129 @@
 package view;
 
-import model.Usuario;
 import database.UsuarioDAO;
+import model.Usuario;
 
 import javax.swing.*;
+import java.awt.*;
 
 public class TelaCadastroUsuario extends JFrame {
 
-    private JTextField campoNome;
-    private JTextField campoCpf;
-    private JTextField campoEmail;
-    private JPasswordField campoSenha;
-    private JPasswordField campoConfirmarSenha;
-    private JButton botaoCadastrar;
-    private JButton botaoCancelar;
+    private JTextField campoNome, campoCpf, campoEmail;
+    private JPasswordField campoSenha, campoConfirmarSenha;
+    private JButton botaoCadastrar, botaoCancelar;
 
     public TelaCadastroUsuario() {
-        setTitle("Cadastro de Usuário");
-        setSize(380, 340);
+        setTitle("Cadastro de Usuário - SolarDragons");
+        setMinimumSize(new Dimension(450, 800));
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
-        setLayout(null);
+        setResizable(true);
+
+        setLayout(new GridBagLayout());
+        GridBagConstraints c = new GridBagConstraints();
+        EstiloSolarDragons.aplicarFundo(getContentPane());
+
+        JLabel logo = EstiloSolarDragons.criarLogo(
+                250, 250, "C:\\Users\\david\\IdeaProjects\\SolarDragons\\src\\resources\\iconSolarDragons.png");
+        c.gridx = 0;
+        c.gridy = 0;
+        c.insets = new Insets(10, 0, 15, 0);
+        add(logo, c);
+
+        JLabel titulo = new JLabel("Cadastro de Usuário");
+        titulo.setFont(EstiloSolarDragons.TITULO);
+        titulo.setForeground(EstiloSolarDragons.AZUL_ESCURO);
+        c.gridy = 1;
+        c.insets = new Insets(0, 0, 20, 0);
+        add(titulo, c);
+
+        c.anchor = GridBagConstraints.WEST;
 
         JLabel labelNome = new JLabel("Nome:");
-        labelNome.setBounds(40, 30, 80, 25);
-        add(labelNome);
+        labelNome.setFont(EstiloSolarDragons.LABEL);
+        labelNome.setForeground(EstiloSolarDragons.AZUL_ESCURO);
+        c.gridy = 2;
+        c.insets = new Insets(5, 50, 5, 50);
+        add(labelNome, c);
 
-        campoNome = new JTextField();
-        campoNome.setBounds(130, 30, 180, 25);
-        add(campoNome);
+        campoNome = new JTextField(20);
+        EstiloSolarDragons.estilizarCampo(campoNome);
+        c.gridy = 3;
+        c.insets = new Insets(5, 50, 10, 50);
+        c.fill = GridBagConstraints.HORIZONTAL;
+        add(campoNome, c);
 
         JLabel labelCpf = new JLabel("CPF:");
-        labelCpf.setBounds(40, 70, 80, 25);
-        add(labelCpf);
+        labelCpf.setFont(EstiloSolarDragons.LABEL);
+        labelCpf.setForeground(EstiloSolarDragons.AZUL_ESCURO);
+        c.gridy = 4;
+        c.insets = new Insets(5, 50, 5, 50);
+        add(labelCpf, c);
 
-        campoCpf = new JTextField();
-        campoCpf.setBounds(130, 70, 180, 25);
-        add(campoCpf);
+        campoCpf = new JTextField(20);
+        EstiloSolarDragons.estilizarCampo(campoCpf);
+        c.gridy = 5;
+        c.insets = new Insets(5, 50, 10, 50);
+        add(campoCpf, c);
 
         JLabel labelEmail = new JLabel("Email:");
-        labelEmail.setBounds(40, 110, 80, 25);
-        add(labelEmail);
+        labelEmail.setFont(EstiloSolarDragons.LABEL);
+        labelEmail.setForeground(EstiloSolarDragons.AZUL_ESCURO);
+        c.gridy = 6;
+        c.insets = new Insets(5, 50, 5, 50);
+        add(labelEmail, c);
 
-        campoEmail = new JTextField();
-        campoEmail.setBounds(130, 110, 180, 25);
-        add(campoEmail);
+        campoEmail = new JTextField(20);
+        EstiloSolarDragons.estilizarCampo(campoEmail);
+        c.gridy = 7;
+        c.insets = new Insets(5, 50, 10, 50);
+        add(campoEmail, c);
 
         JLabel labelSenha = new JLabel("Senha:");
-        labelSenha.setBounds(40, 150, 80, 25);
-        add(labelSenha);
+        labelSenha.setFont(EstiloSolarDragons.LABEL);
+        labelSenha.setForeground(EstiloSolarDragons.AZUL_ESCURO);
+        c.gridy = 8;
+        c.insets = new Insets(5, 50, 5, 50);
+        add(labelSenha, c);
 
-        campoSenha = new JPasswordField();
-        campoSenha.setBounds(130, 150, 180, 25);
-        add(campoSenha);
+        campoSenha = new JPasswordField(20);
+        EstiloSolarDragons.estilizarCampo(campoSenha);
+        c.gridy = 9;
+        c.insets = new Insets(5, 50, 10, 50);
+        add(campoSenha, c);
 
-        JLabel labelConfirmarSenha = new JLabel("Confirmar Senha:");
-        labelConfirmarSenha.setBounds(10, 190, 120, 25);
-        add(labelConfirmarSenha);
+        JLabel labelConfirmaSenha = new JLabel("Confirmar Senha:");
+        labelConfirmaSenha.setFont(EstiloSolarDragons.LABEL);
+        labelConfirmaSenha.setForeground(EstiloSolarDragons.AZUL_ESCURO);
+        c.gridy = 10;
+        c.insets = new Insets(5, 50, 5, 50);
+        add(labelConfirmaSenha, c);
 
-        campoConfirmarSenha = new JPasswordField();
-        campoConfirmarSenha.setBounds(130, 190, 180, 25);
-        add(campoConfirmarSenha);
+        campoConfirmarSenha = new JPasswordField(20);
+        EstiloSolarDragons.estilizarCampo(campoConfirmarSenha);
+        c.gridy = 11;
+        c.insets = new Insets(5, 50, 20, 50);
+        add(campoConfirmarSenha, c);
+
+        JPanel painelBotoes = new JPanel(new FlowLayout(FlowLayout.CENTER, 15, 0));
+        EstiloSolarDragons.aplicarFundo(painelBotoes);
 
         botaoCadastrar = new JButton("Cadastrar");
-        botaoCadastrar.setBounds(80, 240, 100, 30);
-        add(botaoCadastrar);
+        EstiloSolarDragons.estilizarBotaoPrincipal(botaoCadastrar);
 
         botaoCancelar = new JButton("Cancelar");
-        botaoCancelar.setBounds(200, 240, 100, 30);
-        add(botaoCancelar);
+        EstiloSolarDragons.estilizarBotaoSecundario(botaoCancelar);
+
+        Dimension botaoSize = new Dimension(140, 40);
+        botaoCadastrar.setPreferredSize(botaoSize);
+        botaoCancelar.setPreferredSize(botaoSize);
+
+        painelBotoes.add(botaoCadastrar);
+        painelBotoes.add(botaoCancelar);
+
+        c.gridy = 12;
+        c.insets = new Insets(10, 0, 20, 0);
+        add(painelBotoes, c);
 
         botaoCadastrar.addActionListener(e -> cadastrarUsuario());
         botaoCancelar.addActionListener(e -> {
@@ -130,3 +185,4 @@ public class TelaCadastroUsuario extends JFrame {
         }
     }
 }
+
