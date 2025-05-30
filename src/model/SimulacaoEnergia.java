@@ -1,17 +1,15 @@
 package model;
 
-import service.ParametrosSistema;
-
 import java.util.HashMap;
 import java.util.Map;
 
 public class SimulacaoEnergia {
-    private static final double CUSTO_FIXO = 3000.0;             // Custo fixo da instalação
-    private static final double CUSTO_POR_KWP = 5000.0;          // Custo por kWp instalado
-    private static final double FATOR_ECONOMIA = 0.8;            // 80% de economia
-    private static final double PERCENTUAL_GERACAO = 0.95;       // Geração para cobrir 95% do consumo
-    private static final double POTENCIA_MODULO_KW = 0.555;      // 555 W por módulo
-    private static final double AREA_MODULO_M2 = 2.0;            // 2m² por módulo
+    private static final double CUSTO_FIXO = 3000.0;
+    private static final double CUSTO_POR_KWP = 5000.0;
+    private static final double FATOR_ECONOMIA = 0.8;
+    private static final double PERCENTUAL_GERACAO = 0.95;
+    private static final double POTENCIA_MODULO_KW = 0.555;
+    private static final double AREA_MODULO_M2 = 2.0;
 
     private static final Map<String, Double> tarifaPorEstado = new HashMap<>() {{
         put("AC", 1.10);
@@ -53,25 +51,29 @@ public class SimulacaoEnergia {
     private final double areaNecessariaM2;
     private final double custoSistema;
 
+    private int paybackMeses = -1;
+
+
     public SimulacaoEnergia(String estado, double valorContaReais) {
         this.valorContaReais = valorContaReais;
         this.tarifa = tarifaPorEstado.getOrDefault(estado.toUpperCase(), 1.10);
-
         this.consumoEstimadoKwh = valorContaReais / this.tarifa;
-
         this.geracaoEstimadaKwh = consumoEstimadoKwh * PERCENTUAL_GERACAO;
-
         double producaoMediaKwhPorKwp = 135.0;
         this.potenciaSistemaKw = geracaoEstimadaKwh / producaoMediaKwhPorKwp;
-
         this.quantidadeModulos = (int) Math.ceil(potenciaSistemaKw / POTENCIA_MODULO_KW);
-
         this.areaNecessariaM2 = quantidadeModulos * AREA_MODULO_M2;
-
         this.custoSistema = CUSTO_FIXO + (potenciaSistemaKw * CUSTO_POR_KWP);
-
         this.economiaMensal = (this.tarifa * this.geracaoEstimadaKwh) * FATOR_ECONOMIA;
         this.economiaAnual = economiaMensal * 12;
+
+        this.paybackMeses = (int) Math.round(getPaybackAnos() * 12);
+    }
+
+
+    public SimulacaoEnergia(String estado, double valorContaReais, int paybackMeses) {
+        this(estado, valorContaReais);
+        this.paybackMeses = paybackMeses;
     }
 
     public double getValorContaReais() {
@@ -112,6 +114,14 @@ public class SimulacaoEnergia {
 
     public double getCustoSistema() {
         return custoSistema;
+    }
+
+    public int getPaybackMeses() {
+        return paybackMeses;
+    }
+
+    public void setPaybackMeses(int paybackMeses) {
+        this.paybackMeses = paybackMeses;
     }
 
     public double getPaybackAnos() {
