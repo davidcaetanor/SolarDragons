@@ -61,4 +61,8 @@ public class EstiloSolarDragons {
             return new JLabel("Logo");
         }
     }
+    public static void estilizarLabel(JLabel label) {
+        label.setFont(new Font("Arial", Font.BOLD, 15));
+        label.setForeground(AZUL_ESCURO);
+    }
 }

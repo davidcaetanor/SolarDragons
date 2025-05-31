@@ -7,6 +7,7 @@ import service.ViaCEP;
 import model.Endereco;
 
 import javax.swing.*;
+import java.awt.*;
 
 public class TelaCadastroClienteEdicao extends JFrame {
 
@@ -18,86 +19,160 @@ public class TelaCadastroClienteEdicao extends JFrame {
         this.cpfCliente = cpfCliente;
 
         setTitle("Editar Cliente");
-        setSize(480, 430);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        setMinimumSize(new Dimension(730, 730));
         setLocationRelativeTo(null);
-        setLayout(null);
+        setResizable(true);
 
+        EstiloSolarDragons.aplicarFundo(getContentPane());
+        setLayout(new GridBagLayout());
+        GridBagConstraints c = new GridBagConstraints();
+
+
+        JLabel logo = EstiloSolarDragons.criarLogo(160, 160, "C:\\Users\\david\\IdeaProjects\\SolarDragons\\src\\resources\\iconSolarDragons.png");
+        c.gridx = 0; c.gridy = 0; c.gridwidth = 2;
+        c.insets = new Insets(20, 0, 10, 0); c.anchor = GridBagConstraints.CENTER;
+        add(logo, c);
+
+
+        JLabel titulo = new JLabel("Editar Cliente");
+        titulo.setFont(EstiloSolarDragons.TITULO);
+        titulo.setForeground(EstiloSolarDragons.AZUL_ESCURO);
+        c.gridy = 1; c.insets = new Insets(0, 0, 30, 0);
+        add(titulo, c);
+
+        c.gridwidth = 1; c.anchor = GridBagConstraints.WEST;
+        c.insets = new Insets(7, 35, 2, 10);
+
+        int linha = 2;
+
+
+        c.gridx = 0; c.gridy = linha;
         JLabel labelNome = new JLabel("Nome:");
-        labelNome.setBounds(30, 30, 100, 25);
-        add(labelNome);
-        campoNome = new JTextField();
-        campoNome.setBounds(140, 30, 280, 25);
-        add(campoNome);
+        EstiloSolarDragons.estilizarLabel(labelNome);
+        add(labelNome, c);
+        c.gridx = 1;
+        campoNome = new JTextField(22);
+        EstiloSolarDragons.estilizarCampo(campoNome);
+        c.fill = GridBagConstraints.HORIZONTAL; c.weightx = 1.0;
+        add(campoNome, c);
 
+
+        c.gridx = 0; c.gridy = ++linha; c.fill = GridBagConstraints.NONE; c.weightx = 0;
         JLabel labelCpf = new JLabel("CPF do Cliente:");
-        labelCpf.setBounds(30, 70, 100, 25);
-        add(labelCpf);
-        campoCpf = new JTextField();
-        campoCpf.setBounds(140, 70, 180, 25);
-        campoCpf.setEditable(false); // CPF não pode ser alterado
-        add(campoCpf);
+        EstiloSolarDragons.estilizarLabel(labelCpf);
+        add(labelCpf, c);
+        c.gridx = 1;
+        campoCpf = new JTextField(15);
+        campoCpf.setEditable(false);
+        EstiloSolarDragons.estilizarCampo(campoCpf);
+        c.fill = GridBagConstraints.HORIZONTAL; c.weightx = 1.0;
+        add(campoCpf, c);
 
+
+        c.gridx = 0; c.gridy = ++linha; c.fill = GridBagConstraints.NONE; c.weightx = 0;
         JLabel labelEmail = new JLabel("E-mail:");
-        labelEmail.setBounds(30, 110, 100, 25);
-        add(labelEmail);
-        campoEmail = new JTextField();
-        campoEmail.setBounds(140, 110, 280, 25);
-        add(campoEmail);
+        EstiloSolarDragons.estilizarLabel(labelEmail);
+        add(labelEmail, c);
+        c.gridx = 1;
+        campoEmail = new JTextField(22);
+        EstiloSolarDragons.estilizarCampo(campoEmail);
+        c.fill = GridBagConstraints.HORIZONTAL; c.weightx = 1.0;
+        add(campoEmail, c);
 
+
+        c.gridx = 0; c.gridy = ++linha; c.fill = GridBagConstraints.NONE; c.weightx = 0;
         JLabel labelCep = new JLabel("CEP:");
-        labelCep.setBounds(30, 150, 100, 25);
-        add(labelCep);
-        campoCep = new JTextField();
-        campoCep.setBounds(140, 150, 90, 25);
-        add(campoCep);
+        EstiloSolarDragons.estilizarLabel(labelCep);
+        add(labelCep, c);
+        c.gridx = 1;
+        JPanel painelCep = new JPanel(new BorderLayout(5,0));
+        painelCep.setOpaque(false);
+        campoCep = new JTextField(8);
+        EstiloSolarDragons.estilizarCampo(campoCep);
+        painelCep.add(campoCep, BorderLayout.CENTER);
 
         botaoBuscarCep = new JButton("Buscar CEP");
-        botaoBuscarCep.setBounds(240, 150, 120, 25);
-        add(botaoBuscarCep);
+        EstiloSolarDragons.estilizarBotaoSecundario(botaoBuscarCep);
+        botaoBuscarCep.setPreferredSize(new Dimension(120, 30));
+        painelCep.add(botaoBuscarCep, BorderLayout.EAST);
 
+        c.fill = GridBagConstraints.HORIZONTAL; c.weightx = 1.0;
+        add(painelCep, c);
+
+
+        c.gridx = 0; c.gridy = ++linha; c.fill = GridBagConstraints.NONE; c.weightx = 0;
         JLabel labelLogradouro = new JLabel("Logradouro:");
-        labelLogradouro.setBounds(30, 190, 100, 25);
-        add(labelLogradouro);
-        campoLogradouro = new JTextField();
-        campoLogradouro.setBounds(140, 190, 280, 25);
-        add(campoLogradouro);
+        EstiloSolarDragons.estilizarLabel(labelLogradouro);
+        add(labelLogradouro, c);
+        c.gridx = 1;
+        campoLogradouro = new JTextField(22);
+        EstiloSolarDragons.estilizarCampo(campoLogradouro);
+        c.fill = GridBagConstraints.HORIZONTAL; c.weightx = 1.0;
+        add(campoLogradouro, c);
 
+
+        c.gridx = 0; c.gridy = ++linha; c.fill = GridBagConstraints.NONE; c.weightx = 0;
         JLabel labelNumero = new JLabel("Número:");
-        labelNumero.setBounds(30, 230, 100, 25);
-        add(labelNumero);
-        campoNumero = new JTextField();
-        campoNumero.setBounds(140, 230, 90, 25);
-        add(campoNumero);
+        EstiloSolarDragons.estilizarLabel(labelNumero);
+        add(labelNumero, c);
+        c.gridx = 1;
+        campoNumero = new JTextField(8);
+        EstiloSolarDragons.estilizarCampo(campoNumero);
+        c.fill = GridBagConstraints.HORIZONTAL; c.weightx = 1.0;
+        add(campoNumero, c);
 
+
+        c.gridx = 0; c.gridy = ++linha; c.fill = GridBagConstraints.NONE; c.weightx = 0;
         JLabel labelBairro = new JLabel("Bairro:");
-        labelBairro.setBounds(30, 270, 100, 25);
-        add(labelBairro);
-        campoBairro = new JTextField();
-        campoBairro.setBounds(140, 270, 180, 25);
-        add(campoBairro);
+        EstiloSolarDragons.estilizarLabel(labelBairro);
+        add(labelBairro, c);
+        c.gridx = 1;
+        campoBairro = new JTextField(18);
+        EstiloSolarDragons.estilizarCampo(campoBairro);
+        c.fill = GridBagConstraints.HORIZONTAL; c.weightx = 1.0;
+        add(campoBairro, c);
 
+
+        c.gridx = 0; c.gridy = ++linha; c.fill = GridBagConstraints.NONE; c.weightx = 0;
         JLabel labelCidade = new JLabel("Cidade:");
-        labelCidade.setBounds(30, 310, 100, 25);
-        add(labelCidade);
-        campoCidade = new JTextField();
-        campoCidade.setBounds(140, 310, 180, 25);
-        add(campoCidade);
+        EstiloSolarDragons.estilizarLabel(labelCidade);
+        add(labelCidade, c);
+        c.gridx = 1;
+        campoCidade = new JTextField(18);
+        EstiloSolarDragons.estilizarCampo(campoCidade);
+        c.fill = GridBagConstraints.HORIZONTAL; c.weightx = 1.0;
+        add(campoCidade, c);
 
+        c.gridx = 0; c.gridy = ++linha; c.fill = GridBagConstraints.NONE; c.weightx = 0;
         JLabel labelEstado = new JLabel("Estado (UF):");
-        labelEstado.setBounds(30, 350, 100, 25);
-        add(labelEstado);
-        campoEstado = new JTextField();
-        campoEstado.setBounds(140, 350, 50, 25);
-        add(campoEstado);
+        EstiloSolarDragons.estilizarLabel(labelEstado);
+        add(labelEstado, c);
+        c.gridx = 1;
+        campoEstado = new JTextField(3);
+        EstiloSolarDragons.estilizarCampo(campoEstado);
+        c.fill = GridBagConstraints.HORIZONTAL; c.weightx = 1.0;
+        add(campoEstado, c);
+
+        JPanel painelBotoes = new JPanel(new FlowLayout(FlowLayout.CENTER, 16, 16));
+        painelBotoes.setOpaque(false);
 
         botaoSalvar = new JButton("Salvar");
-        botaoSalvar.setBounds(100, 380, 100, 30);
-        add(botaoSalvar);
+        EstiloSolarDragons.estilizarBotaoPrincipal(botaoSalvar);
 
         botaoCancelar = new JButton("Cancelar");
-        botaoCancelar.setBounds(220, 380, 100, 30);
-        add(botaoCancelar);
+        EstiloSolarDragons.estilizarBotaoSecundario(botaoCancelar);
+
+        Dimension tamanhoBotao = new Dimension(130, 40);
+        botaoSalvar.setPreferredSize(tamanhoBotao);
+        botaoCancelar.setPreferredSize(tamanhoBotao);
+
+        painelBotoes.add(botaoSalvar);
+        painelBotoes.add(botaoCancelar);
+
+        c.gridx = 0; c.gridy = ++linha; c.gridwidth = 2; c.insets = new Insets(32, 0, 8, 0);
+        c.fill = GridBagConstraints.NONE;
+        add(painelBotoes, c);
 
         botaoBuscarCep.addActionListener(e -> buscarCep());
         botaoSalvar.addActionListener(e -> salvarEdicao());
@@ -107,7 +182,6 @@ public class TelaCadastroClienteEdicao extends JFrame {
         });
 
         carregarCliente();
-
         setVisible(true);
     }
 
