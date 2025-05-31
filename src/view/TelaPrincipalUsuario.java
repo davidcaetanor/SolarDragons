@@ -13,8 +13,7 @@ public class TelaPrincipalUsuario extends JFrame {
 
     public TelaPrincipalUsuario() {
         setTitle("Painel do Usuário - SolarDragons");
-        setSize(500, 600);
-        setMinimumSize(new Dimension(450, 600));
+        setMinimumSize(new Dimension(750, 700));
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setResizable(true);
@@ -25,7 +24,7 @@ public class TelaPrincipalUsuario extends JFrame {
 
 
         JLabel logo = EstiloSolarDragons.criarLogo(
-                120, 120, "C:\\Users\\david\\IdeaProjects\\SolarDragons\\src\\resources\\iconSolarDragons.png");
+                200, 200, "C:\\Users\\david\\IdeaProjects\\SolarDragons\\src\\resources\\iconSolarDragons.png");
         c.gridx = 0; c.gridy = 0; c.insets = new Insets(18,0,6,0);
         add(logo, c);
 
@@ -35,7 +34,6 @@ public class TelaPrincipalUsuario extends JFrame {
         c.gridy = 1; c.insets = new Insets(4,0,24,0);
         add(saudacao, c);
 
-        // Painel de botões principais
         JPanel painelBotoes = new JPanel(new GridLayout(6, 1, 0, 18));
         EstiloSolarDragons.aplicarFundo(painelBotoes);
 
@@ -63,7 +61,6 @@ public class TelaPrincipalUsuario extends JFrame {
         EstiloSolarDragons.estilizarBotaoPrincipal(botaoSair);
         painelBotoes.add(botaoSair);
 
-        // Tamanho dos botões igual
         Dimension botaoSize = new Dimension(200, 40);
         for (Component comp : painelBotoes.getComponents()) {
             if (comp instanceof JButton) {

@@ -5,63 +5,136 @@ import database.ClienteDAO;
 import service.SessaoUsuario;
 
 import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import javax.swing.table.*;
+import java.awt.*;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.Comparator;
 
 public class TelaGerenciarClientes extends JFrame {
     private JTable tabelaClientes;
     private DefaultTableModel tableModel;
     private JTextField campoBusca;
-    private JButton botaoOrdenarAZ;
+    private JButton botaoOrdenarAZ, botaoBuscar;
     private boolean ordemAscendente = true;
-
-    private List<Cliente> clientesDoUsuario; // Para filtros e ordenação
+    private List<Cliente> clientesDoUsuario;
+    private final String placeholder = "Digite o nome aqui";
 
     public TelaGerenciarClientes() {
-        setTitle("Gerenciar Clientes");
-        setSize(700, 420);
+        setTitle("Gerenciar Clientes - SolarDragons");
+        setSize(750, 500);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
-        setLayout(null);
+        setLayout(new BorderLayout());
+        EstiloSolarDragons.aplicarFundo(getContentPane());
 
-        JLabel labelTitulo = new JLabel("Clientes cadastrados:");
-        labelTitulo.setBounds(20, 15, 200, 25);
-        add(labelTitulo);
+        JLabel titulo = new JLabel("Gerenciar Clientes", JLabel.CENTER);
+        titulo.setFont(EstiloSolarDragons.TITULO);
+        titulo.setForeground(EstiloSolarDragons.AZUL_ESCURO);
+        add(titulo, BorderLayout.NORTH);
+
+        JPanel painelCentral = new JPanel(new BorderLayout());
+        EstiloSolarDragons.aplicarFundo(painelCentral);
+
+        JPanel painelBusca = new JPanel(new BorderLayout());
+        EstiloSolarDragons.aplicarFundo(painelBusca);
 
         campoBusca = new JTextField();
-        campoBusca.setBounds(180, 15, 220, 25);
-        add(campoBusca);
+        EstiloSolarDragons.estilizarCampo(campoBusca);
+        campoBusca.setText(placeholder);
+        campoBusca.setForeground(Color.GRAY);
+        campoBusca.setFont(campoBusca.getFont().deriveFont(Font.ITALIC));
+        painelBusca.add(campoBusca, BorderLayout.CENTER);
 
-        botaoOrdenarAZ = new JButton("Ordenar A-Z");
-        botaoOrdenarAZ.setBounds(420, 15, 120, 25);
-        add(botaoOrdenarAZ);
+        campoBusca.addFocusListener(new FocusListener() {
+            public void focusGained(FocusEvent e) {
+                if (campoBusca.getText().equals(placeholder)) {
+                    campoBusca.setText("");
+                    campoBusca.setForeground(EstiloSolarDragons.AZUL_ESCURO);
+                    campoBusca.setFont(campoBusca.getFont().deriveFont(Font.PLAIN));
+                }
+            }
+            public void focusLost(FocusEvent e) {
+                if (campoBusca.getText().trim().isEmpty()) {
+                    campoBusca.setForeground(Color.GRAY);
+                    campoBusca.setFont(campoBusca.getFont().deriveFont(Font.ITALIC));
+                    campoBusca.setText(placeholder);
+                }
+            }
+        });
+
+        botaoBuscar = new JButton("Buscar");
+        EstiloSolarDragons.estilizarBotaoSecundario(botaoBuscar);
+        botaoBuscar.setPreferredSize(new Dimension(120, 35));
+        painelBusca.add(botaoBuscar, BorderLayout.EAST);
+
+        painelCentral.add(painelBusca, BorderLayout.NORTH);
 
         String[] colunas = {"Nome", "CPF", "Email", "Cidade", "Estado"};
         tableModel = new DefaultTableModel(colunas, 0) {
             public boolean isCellEditable(int row, int column) { return false; }
         };
         tabelaClientes = new JTable(tableModel);
+
+        tabelaClientes.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
+            @Override
+            public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+                Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+                if (!isSelected) {
+                    c.setBackground(row % 2 == 0 ? Color.WHITE : new Color(245, 245, 245));
+                } else {
+                    c.setBackground(new Color(220, 230, 245));
+                }
+                c.setForeground(EstiloSolarDragons.AZUL_ESCURO);
+                return c;
+            }
+        });
+        tabelaClientes.setRowHeight(28);
+
+        JTableHeader header = tabelaClientes.getTableHeader();
+        header.setBackground(EstiloSolarDragons.AZUL_ESCURO);
+        header.setForeground(Color.WHITE);
+        header.setFont(new Font("Arial", Font.BOLD, 14));
+
         JScrollPane scrollPane = new JScrollPane(tabelaClientes);
-        scrollPane.setBounds(20, 55, 640, 200);
-        add(scrollPane);
+        painelCentral.add(scrollPane, BorderLayout.CENTER);
 
-        JButton botaoAdicionar = new JButton("Adicionar Novo Cliente");
-        botaoAdicionar.setBounds(20, 280, 180, 30);
-        add(botaoAdicionar);
+        add(painelCentral, BorderLayout.CENTER);
 
-        JButton botaoEditar = new JButton("Editar Cliente");
-        botaoEditar.setBounds(210, 280, 120, 30);
-        add(botaoEditar);
 
-        JButton botaoExcluir = new JButton("Excluir Cliente");
-        botaoExcluir.setBounds(340, 280, 120, 30);
-        add(botaoExcluir);
+        JPanel painelBotoes = new JPanel();
+        EstiloSolarDragons.aplicarFundo(painelBotoes);
 
+        JButton botaoAdicionar = new JButton("Adicionar");
+        JButton botaoEditar = new JButton("Editar");
+        JButton botaoExcluir = new JButton("Excluir");
+        botaoOrdenarAZ = new JButton("Ordenar A-Z");
         JButton botaoVoltar = new JButton("Voltar");
-        botaoVoltar.setBounds(470, 280, 120, 30);
-        add(botaoVoltar);
+
+        EstiloSolarDragons.estilizarBotaoPrincipal(botaoAdicionar);
+        EstiloSolarDragons.estilizarBotaoSecundario(botaoEditar);
+        EstiloSolarDragons.estilizarBotaoSecundario(botaoExcluir);
+        EstiloSolarDragons.estilizarBotaoSecundario(botaoOrdenarAZ);
+        EstiloSolarDragons.estilizarBotaoSecundario(botaoVoltar);
+
+        Dimension tamanhoBotoes = new Dimension(120, 35);
+        botaoAdicionar.setPreferredSize(tamanhoBotoes);
+        botaoEditar.setPreferredSize(tamanhoBotoes);
+        botaoExcluir.setPreferredSize(tamanhoBotoes);
+        botaoOrdenarAZ.setPreferredSize(tamanhoBotoes);
+        botaoVoltar.setPreferredSize(tamanhoBotoes);
+
+        painelBotoes.add(botaoAdicionar);
+        painelBotoes.add(botaoEditar);
+        painelBotoes.add(botaoExcluir);
+        painelBotoes.add(botaoOrdenarAZ);
+        painelBotoes.add(botaoVoltar);
+
+        add(painelBotoes, BorderLayout.SOUTH);
 
         botaoAdicionar.addActionListener(e -> {
             dispose();
@@ -75,13 +148,12 @@ public class TelaGerenciarClientes extends JFrame {
             new TelaPrincipalUsuario();
         });
 
-
-        campoBusca.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
-            public void insertUpdate(javax.swing.event.DocumentEvent e) { filtrarTabela(); }
-            public void removeUpdate(javax.swing.event.DocumentEvent e) { filtrarTabela(); }
-            public void changedUpdate(javax.swing.event.DocumentEvent e) { filtrarTabela(); }
+        botaoBuscar.addActionListener(e -> filtrarTabela());
+        campoBusca.getDocument().addDocumentListener(new DocumentListener() {
+            public void insertUpdate(DocumentEvent e) { filtrarTabela(); }
+            public void removeUpdate(DocumentEvent e) { filtrarTabela(); }
+            public void changedUpdate(DocumentEvent e) { filtrarTabela(); }
         });
-
 
         botaoOrdenarAZ.addActionListener(e -> {
             ordemAscendente = !ordemAscendente;
@@ -93,6 +165,7 @@ public class TelaGerenciarClientes extends JFrame {
         atualizarTabela(clientesDoUsuario);
 
         setVisible(true);
+        this.getRootPane().requestFocusInWindow();
     }
 
     private void carregarClientes() {
@@ -116,20 +189,18 @@ public class TelaGerenciarClientes extends JFrame {
 
     private void filtrarTabela() {
         String filtro = campoBusca.getText().trim().toLowerCase();
+        if (filtro.equals(placeholder.toLowerCase())) filtro = "";
+        String finalFiltro = filtro;
         List<Cliente> filtrados = clientesDoUsuario.stream()
-                .filter(c ->
-                        c.getNome().toLowerCase().contains(filtro) ||
-                                c.getCpf().contains(filtro))
+                .filter(c -> c.getNome().toLowerCase().contains(finalFiltro) || c.getCpf().contains(finalFiltro))
                 .collect(Collectors.toList());
         atualizarTabela(filtrados);
     }
 
     private void ordenarTabela() {
         Comparator<Cliente> comparador = Comparator.comparing(Cliente::getNome, String.CASE_INSENSITIVE_ORDER);
-        if (!ordemAscendente) {
-            comparador = comparador.reversed();
-        }
-        clientesDoUsuario = clientesDoUsuario.stream().sorted(comparador).collect(Collectors.toList());
+        clientesDoUsuario = ordemAscendente ? clientesDoUsuario.stream().sorted(comparador).collect(Collectors.toList())
+                : clientesDoUsuario.stream().sorted(comparador.reversed()).collect(Collectors.toList());
         filtrarTabela();
     }
 

@@ -7,96 +7,179 @@ import service.ViaCEP;
 import model.Endereco;
 
 import javax.swing.*;
+import java.awt.*;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 
 public class TelaCadastroCliente extends JFrame {
-
     private JTextField campoNome, campoCpfCliente, campoEmail, campoCep, campoLogradouro, campoNumero, campoBairro, campoCidade, campoEstado;
     private JButton botaoBuscarCep, botaoSalvar, botaoCancelar;
 
     public TelaCadastroCliente() {
         setTitle("Cadastro de Cliente");
-        setSize(500, 480);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        setMinimumSize(new Dimension(700, 700));
         setLocationRelativeTo(null);
-        setLayout(null);
+        setResizable(true);
 
+        EstiloSolarDragons.aplicarFundo(getContentPane());
+        setLayout(new GridBagLayout());
+        GridBagConstraints c = new GridBagConstraints();
+
+        // Logo Dragons
+        JLabel logo = EstiloSolarDragons.criarLogo(
+                120, 120, "C:\\Users\\david\\IdeaProjects\\SolarDragons\\src\\resources\\iconSolarDragons.png");
+        c.gridx = 0; c.gridy = 0; c.gridwidth = 2;
+        c.insets = new Insets(20, 0, 12, 0);
+        add(logo, c);
+
+        // Título
+        JLabel titulo = new JLabel("Cadastro de Cliente");
+        titulo.setFont(EstiloSolarDragons.TITULO);
+        titulo.setForeground(EstiloSolarDragons.AZUL_ESCURO);
+        c.gridy = 1; c.insets = new Insets(0, 0, 30, 0);
+        add(titulo, c);
+
+        c.gridwidth = 1;
+        c.insets = new Insets(7, 35, 2, 10); c.anchor = GridBagConstraints.WEST;
+
+        // Nome
         JLabel labelNome = new JLabel("Nome:");
-        labelNome.setBounds(30, 30, 100, 25);
-        add(labelNome);
-        campoNome = new JTextField();
-        campoNome.setBounds(140, 30, 280, 25);
-        add(campoNome);
+        labelNome.setFont(EstiloSolarDragons.LABEL);
+        labelNome.setForeground(EstiloSolarDragons.AZUL_ESCURO);
+        c.gridx = 0; c.gridy = 2;
+        add(labelNome, c);
 
+        campoNome = new JTextField(24);
+        EstiloSolarDragons.estilizarCampo(campoNome);
+        c.gridx = 1;
+        add(campoNome, c);
+
+        // CPF Cliente
         JLabel labelCpfCliente = new JLabel("CPF do Cliente:");
-        labelCpfCliente.setBounds(30, 70, 100, 25);
-        add(labelCpfCliente);
-        campoCpfCliente = new JTextField();
-        campoCpfCliente.setBounds(140, 70, 180, 25);
-        add(campoCpfCliente);
+        labelCpfCliente.setFont(EstiloSolarDragons.LABEL);
+        labelCpfCliente.setForeground(EstiloSolarDragons.AZUL_ESCURO);
+        c.gridx = 0; c.gridy++;
+        add(labelCpfCliente, c);
+
+        campoCpfCliente = new JTextField(14);
+        EstiloSolarDragons.estilizarCampo(campoCpfCliente);
+        c.gridx = 1;
+        add(campoCpfCliente, c);
+
 
         JLabel labelEmail = new JLabel("Email:");
-        labelEmail.setBounds(30, 110, 100, 25);
-        add(labelEmail);
-        campoEmail = new JTextField();
-        campoEmail.setBounds(140, 110, 180, 25);
-        add(campoEmail);
+        labelEmail.setFont(EstiloSolarDragons.LABEL);
+        labelEmail.setForeground(EstiloSolarDragons.AZUL_ESCURO);
+        c.gridx = 0; c.gridy++;
+        add(labelEmail, c);
+
+        campoEmail = new JTextField(24);
+        EstiloSolarDragons.estilizarCampo(campoEmail);
+        c.gridx = 1;
+        add(campoEmail, c);
+
 
         JLabel labelCep = new JLabel("CEP:");
-        labelCep.setBounds(30, 150, 100, 25);
-        add(labelCep);
-        campoCep = new JTextField();
-        campoCep.setBounds(140, 150, 90, 25);
-        add(campoCep);
+        labelCep.setFont(EstiloSolarDragons.LABEL);
+        labelCep.setForeground(EstiloSolarDragons.AZUL_ESCURO);
+        c.gridx = 0; c.gridy++;
+        add(labelCep, c);
+
+        JPanel painelCep = new JPanel(new BorderLayout());
+        painelCep.setOpaque(false);
+        campoCep = new JTextField(8);
+        EstiloSolarDragons.estilizarCampo(campoCep);
+        painelCep.add(campoCep, BorderLayout.CENTER);
 
         botaoBuscarCep = new JButton("Buscar CEP");
-        botaoBuscarCep.setBounds(240, 150, 120, 25);
-        add(botaoBuscarCep);
+        EstiloSolarDragons.estilizarBotaoSecundario(botaoBuscarCep);
+        botaoBuscarCep.setPreferredSize(new Dimension(120, 30));
+        painelCep.add(botaoBuscarCep, BorderLayout.EAST);
+
+        c.gridx = 1;
+        add(painelCep, c);
+
 
         JLabel labelLogradouro = new JLabel("Logradouro:");
-        labelLogradouro.setBounds(30, 190, 100, 25);
-        add(labelLogradouro);
-        campoLogradouro = new JTextField();
-        campoLogradouro.setBounds(140, 190, 280, 25);
-        add(campoLogradouro);
+        labelLogradouro.setFont(EstiloSolarDragons.LABEL);
+        labelLogradouro.setForeground(EstiloSolarDragons.AZUL_ESCURO);
+        c.gridx = 0; c.gridy++;
+        add(labelLogradouro, c);
+
+        campoLogradouro = new JTextField(22);
+        EstiloSolarDragons.estilizarCampo(campoLogradouro);
+        c.gridx = 1;
+        add(campoLogradouro, c);
+
 
         JLabel labelNumero = new JLabel("Número:");
-        labelNumero.setBounds(30, 230, 100, 25);
-        add(labelNumero);
-        campoNumero = new JTextField();
-        campoNumero.setBounds(140, 230, 90, 25);
-        add(campoNumero);
+        labelNumero.setFont(EstiloSolarDragons.LABEL);
+        labelNumero.setForeground(EstiloSolarDragons.AZUL_ESCURO);
+        c.gridx = 0; c.gridy++;
+        add(labelNumero, c);
+
+        campoNumero = new JTextField(8);
+        EstiloSolarDragons.estilizarCampo(campoNumero);
+        c.gridx = 1;
+        add(campoNumero, c);
+
 
         JLabel labelBairro = new JLabel("Bairro:");
-        labelBairro.setBounds(30, 270, 100, 25);
-        add(labelBairro);
-        campoBairro = new JTextField();
-        campoBairro.setBounds(140, 270, 180, 25);
-        add(campoBairro);
+        labelBairro.setFont(EstiloSolarDragons.LABEL);
+        labelBairro.setForeground(EstiloSolarDragons.AZUL_ESCURO);
+        c.gridx = 0; c.gridy++;
+        add(labelBairro, c);
+
+        campoBairro = new JTextField(18);
+        EstiloSolarDragons.estilizarCampo(campoBairro);
+        c.gridx = 1;
+        add(campoBairro, c);
+
 
         JLabel labelCidade = new JLabel("Cidade:");
-        labelCidade.setBounds(30, 310, 100, 25);
-        add(labelCidade);
-        campoCidade = new JTextField();
-        campoCidade.setBounds(140, 310, 180, 25);
-        add(campoCidade);
+        labelCidade.setFont(EstiloSolarDragons.LABEL);
+        labelCidade.setForeground(EstiloSolarDragons.AZUL_ESCURO);
+        c.gridx = 0; c.gridy++;
+        add(labelCidade, c);
+
+        campoCidade = new JTextField(18);
+        EstiloSolarDragons.estilizarCampo(campoCidade);
+        c.gridx = 1;
+        add(campoCidade, c);
 
         JLabel labelEstado = new JLabel("Estado (UF):");
-        labelEstado.setBounds(30, 350, 100, 25);
-        add(labelEstado);
-        campoEstado = new JTextField();
-        campoEstado.setBounds(140, 350, 50, 25);
-        add(campoEstado);
+        labelEstado.setFont(EstiloSolarDragons.LABEL);
+        labelEstado.setForeground(EstiloSolarDragons.AZUL_ESCURO);
+        c.gridx = 0; c.gridy++;
+        add(labelEstado, c);
+
+        campoEstado = new JTextField(3);
+        EstiloSolarDragons.estilizarCampo(campoEstado);
+        c.gridx = 1;
+        add(campoEstado, c);
+
+        JPanel painelBotoes = new JPanel(new FlowLayout(FlowLayout.CENTER, 16, 16));
+        painelBotoes.setOpaque(false);
 
         botaoSalvar = new JButton("Salvar");
-        botaoSalvar.setBounds(120, 400, 100, 35);
-        add(botaoSalvar);
+        EstiloSolarDragons.estilizarBotaoPrincipal(botaoSalvar);
 
         botaoCancelar = new JButton("Cancelar");
-        botaoCancelar.setBounds(250, 400, 100, 35);
-        add(botaoCancelar);
+        EstiloSolarDragons.estilizarBotaoSecundario(botaoCancelar);
 
+        Dimension tamanhoBotao = new Dimension(130, 40);
+        botaoSalvar.setPreferredSize(tamanhoBotao);
+        botaoCancelar.setPreferredSize(tamanhoBotao);
+
+        painelBotoes.add(botaoSalvar);
+        painelBotoes.add(botaoCancelar);
+
+        c.gridx = 0; c.gridy++; c.gridwidth = 2; c.insets = new Insets(32, 0, 8, 0);
+        add(painelBotoes, c);
+
+        // Lógica dos botões
         botaoBuscarCep.addActionListener(e -> buscarCep());
-
         botaoSalvar.addActionListener(e -> salvarCliente());
         botaoCancelar.addActionListener(e -> {
             dispose();

@@ -17,8 +17,7 @@ public class TelaMeusDados extends JFrame {
         this.telaPrincipal = telaPrincipal;
 
         setTitle("Meus Dados");
-        setSize(450, 500);
-        setMinimumSize(new Dimension(420, 450));
+        setMinimumSize(new Dimension(750, 700));
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
         setResizable(true);
@@ -27,9 +26,9 @@ public class TelaMeusDados extends JFrame {
         GridBagConstraints c = new GridBagConstraints();
         EstiloSolarDragons.aplicarFundo(getContentPane());
 
-        // Logo
+
         JLabel logo = EstiloSolarDragons.criarLogo(
-                80, 80, "C:\\Users\\david\\IdeaProjects\\SolarDragons\\src\\resources\\iconSolarDragons.png");
+                180, 180, "C:\\Users\\david\\IdeaProjects\\SolarDragons\\src\\resources\\iconSolarDragons.png");
         c.gridx = 0; c.gridy = 0; c.insets = new Insets(20,0,10,0);
         add(logo, c);
 

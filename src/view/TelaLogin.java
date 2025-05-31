@@ -15,7 +15,7 @@ public class TelaLogin extends JFrame {
     public TelaLogin() {
         setTitle("SolarDragons - Login");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setMinimumSize(new Dimension(450, 700));
+        setMinimumSize(new Dimension(750, 700));
         setLocationRelativeTo(null);
         setResizable(true);
 
