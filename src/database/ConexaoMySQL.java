@@ -9,7 +9,7 @@ public class ConexaoMySQL {
 
     private static final String URL = "jdbc:mysql://localhost:3306/solardragons?useSSL=false&serverTimezone=UTC";
     private static final String USUARIO = "root"; // Seu USER do MYSQL
-    private static final String SENHA = "SENHA_DO_MYSQL_AQUI";   // Senha do seu MYSQL
+    private static final String SENHA = "David17012002@";   // Senha do seu MYSQL
 
     private static Connection conexao;
 
