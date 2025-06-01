@@ -1,29 +1,41 @@
-# SolarDragons - Simulador de Economia com Energia Solar
+# SolarDragons – Simulador de Economia com Energia Solar
 
-**Projeto TCM - Simulador de Economia com Energia Solar **  
+**Projeto – Simulador de Economia com Energia Solar**  
 Professor: Túlio Cearamicoli Vivaldini
 
-## Sobre o Projeto
+## Sobre
 
-Este sistema simula a economia gerada pelo uso de energia solar em locais. 
-O usuário consegue cadastrar dados para complementar como (nome, CPF, endereço completo, consumo mensal, tarifa) e visualizar a economia estimada, incluindo o retorno sobre o investimento (payback).
+SolarDragons é um sistema para simular a economia gerada pelo uso de energia solar em residências. 
+O usuário pode cadastrar clientes, inserir dados de consumo mensal e endereço. 
+Simular a economia mensal e anual, calcular o tempo de retorno do investimento (payback) e visualizar os resultados por meio de gráficos.
 
 ## Funcionalidades
 
-- Cadastro completo do cliente (nome, CPF, endereço, número da casa);
-- Cálculo de economia com base em dados reais (potência do sistema, produção mensal);
-- Cálculo de payback formatado em frases intuitivas;
-- Geração de gráficos informativos sobre economia anual;
-- Exportação de relatórios (PDF e CSV);
-- Persistência de dados (arquivo ou banco de dados MySQL);
-- Interface gráfica em Java (Swing);
-- Integração com API ViaCEP para preenchimento automático do endereço utilizando, exemplo cep  " xxxxxxxx ". 
+- Cadastro de cliente com nome, CPF e endereço completo (incluindo número)
+- Simulação de economia baseada em dados reais
+- Cálculo e exibição do payback
+- Geração de gráficos sobre economia (Estipulamos 5 anos)
+- Persistência dos dados no banco MySQL
+- Interface gráfica em Java Swing
+- Integração com ViaCEP para preenchimento de endereço por CEP
 
-## Tecnologias Utilizadas
+## Tecnologias
 
 - Java 21
-- Swing (interface gráfica)
-- JDBC (conexão com banco de dados)
-- MySQL + MySQL Workbench
-- XChart (gráficos)
-- JSON (persistência de dados temporária)
+- Swing
+- JDBC
+- MySQL
+- XChart
+- JSON (para persistência temporária)
+
+## Como usar
+
+1. Clone o repositório.
+2. Configure o banco MySQL usando o script em `database/solardragons.sql`.
+3. Ajuste as credenciais no arquivo `ConexaoMySQL.java`.
+4. Compile e execute o projeto na sua IDE
+5. Use a interface gráfica para cadastrar, simular e visualizar resultados.
+
+## Requisitos
+- Java 21
+- MySQL
