@@ -176,7 +176,7 @@ public class TelaADMClientes extends JFrame {
                 .findFirst()
                 .orElse("777");
         dispose();
-        new TelaCadastroClienteEdicao(cpfCliente, cpfUsuario, true); // Novo construtor p/ edição do ADM
+        new TelaCadastroClienteEdicao(cpfCliente, cpfUsuario, true);
     }
 
     private void removerCliente() {
