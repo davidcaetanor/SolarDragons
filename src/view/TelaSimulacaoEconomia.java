@@ -204,7 +204,6 @@ public class TelaSimulacaoEconomia extends JFrame {
         SimulacaoEnergiaDAO simulacaoDAO = new SimulacaoEnergiaDAO();
         simulacaoDAO.cadastrar(simulacao, cliente.getId());
 
-        // Troca logo para versão menor ao exibir o resultado
         logoLabel.setIcon(logoPequeno);
 
         lblConsumo.setText("Consumo estimado: " + String.format("%.2f kWh/mês", simulacao.getConsumoEstimadoKwh()));

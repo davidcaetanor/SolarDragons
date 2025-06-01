@@ -19,11 +19,9 @@ public class TelaLogin extends JFrame {
         setLocationRelativeTo(null);
         setResizable(true);
 
-
         setLayout(new GridBagLayout());
         GridBagConstraints c = new GridBagConstraints();
         EstiloSolarDragons.aplicarFundo(getContentPane());
-
 
         JLabel logo = EstiloSolarDragons.criarLogo(
                 350, 350, "C:\\Users\\david\\IdeaProjects\\SolarDragons\\src\\resources\\iconSolarDragons.png");
@@ -49,7 +47,6 @@ public class TelaLogin extends JFrame {
         c.gridy = 3; c.insets = new Insets(0,50,15,50);
         c.fill = GridBagConstraints.HORIZONTAL;
         add(campoCpf, c);
-
 
         JLabel senhaLabel = new JLabel("Senha:");
         senhaLabel.setFont(EstiloSolarDragons.LABEL);
