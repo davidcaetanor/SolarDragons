@@ -63,9 +63,30 @@ public class SimulacaoEnergiaDAO {
     }
 
     private SimulacaoEnergia construirSimulacao(ResultSet rs) throws SQLException {
-
         double valorConta = rs.getDouble("valor_conta_reais");
-        SimulacaoEnergia s = new SimulacaoEnergia("", valorConta);
-        return s;
+        double tarifa = rs.getDouble("tarifa");
+        double consumoEstimadoKwh = rs.getDouble("consumo_estimado_kwh");
+        double geracaoEstimadaKwh = rs.getDouble("geracao_estimada_kwh");
+        double economiaMensal = rs.getDouble("economia_mensal");
+        double economiaAnual = rs.getDouble("economia_anual");
+        double potenciaSistemaKw = rs.getDouble("potencia_sistema_kw");
+        int quantidadeModulos = rs.getInt("quantidade_modulos");
+        double investimentoTotal = rs.getDouble("investimento_total");
+        int paybackMeses = rs.getInt("tempo_payback_meses");
+        double areaNecessariaM2 = quantidadeModulos * SimulacaoEnergia.AREA_MODULO_M2;
+
+        return new SimulacaoEnergia(
+                valorConta,
+                tarifa,
+                consumoEstimadoKwh,
+                geracaoEstimadaKwh,
+                economiaMensal,
+                economiaAnual,
+                potenciaSistemaKw,
+                quantidadeModulos,
+                areaNecessariaM2,
+                investimentoTotal,
+                paybackMeses
+        );
     }
 }
