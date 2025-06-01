@@ -65,4 +65,13 @@ public class EstiloSolarDragons {
         label.setFont(new Font("Arial", Font.BOLD, 15));
         label.setForeground(AZUL_ESCURO);
     }
+    public static ImageIcon getIcon(int largura, int altura, String caminho) {
+        try {
+            ImageIcon icon = new ImageIcon(caminho);
+            Image img = icon.getImage().getScaledInstance(largura, altura, Image.SCALE_SMOOTH);
+            return new ImageIcon(img);
+        } catch (Exception e) {
+            return new ImageIcon();
+        }
+    }
 }

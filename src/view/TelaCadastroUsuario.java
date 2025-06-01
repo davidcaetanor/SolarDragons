@@ -2,6 +2,7 @@ package view;
 
 import database.UsuarioDAO;
 import model.Usuario;
+import model.ValidadorCPF;
 
 import javax.swing.*;
 import java.awt.*;
@@ -146,8 +147,8 @@ public class TelaCadastroUsuario extends JFrame {
             return;
         }
 
-        if (!cpf.matches("\\d{11}")) {
-            JOptionPane.showMessageDialog(this, "CPF deve conter exatamente 11 dígitos numéricos.", "Erro", JOptionPane.ERROR_MESSAGE);
+        if (!ValidadorCPF.isCPF(cpf)) {
+            JOptionPane.showMessageDialog(this, "CPF inválido! Digite um CPF real e válido.", "Erro", JOptionPane.ERROR_MESSAGE);
             return;
         }
 
@@ -185,4 +186,3 @@ public class TelaCadastroUsuario extends JFrame {
         }
     }
 }
-

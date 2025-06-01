@@ -26,7 +26,7 @@ public class TelaGerenciarClientes extends JFrame {
 
     public TelaGerenciarClientes() {
         setTitle("Gerenciar Clientes - SolarDragons");
-        setSize(750, 500);
+        setMinimumSize(new Dimension(750, 700));
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
         setLayout(new BorderLayout());
@@ -104,7 +104,6 @@ public class TelaGerenciarClientes extends JFrame {
         painelCentral.add(scrollPane, BorderLayout.CENTER);
 
         add(painelCentral, BorderLayout.CENTER);
-
 
         JPanel painelBotoes = new JPanel();
         EstiloSolarDragons.aplicarFundo(painelBotoes);
@@ -211,8 +210,10 @@ public class TelaGerenciarClientes extends JFrame {
             return;
         }
         String cpfCliente = (String) tableModel.getValueAt(linha, 1);
+        String cpfUsuario = SessaoUsuario.getUsuarioLogado().getCpf();
+        boolean adminEditando = SessaoUsuario.getUsuarioLogado().isAdmin();
         dispose();
-        new TelaCadastroClienteEdicao(cpfCliente);
+        new TelaCadastroClienteEdicao(cpfCliente, cpfUsuario, adminEditando);
     }
 
     private void excluirCliente() {

@@ -1,50 +1,73 @@
 package view;
 
 import service.SessaoUsuario;
-
 import javax.swing.*;
+import java.awt.*;
 
 public class TelaADM extends JFrame {
 
     public TelaADM() {
         setTitle("Painel Administrativo - SolarDragons");
-        setSize(500, 470);
+        setMinimumSize(new Dimension(760, 810));
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
-        setLayout(null);
+        setResizable(true);
+
+        setLayout(new GridBagLayout());
+        EstiloSolarDragons.aplicarFundo(getContentPane());
+        GridBagConstraints c = new GridBagConstraints();
+        c.gridx = 0; c.gridwidth = 1;
+        c.insets = new Insets(14, 0, 14, 0);
+
+        JLabel logo = EstiloSolarDragons.criarLogo(
+                200, 200, "C:\\Users\\david\\IdeaProjects\\SolarDragons\\src\\resources\\iconSolarDragons.png");
+        c.gridy = 0;
+        add(logo, c);
 
         JLabel saudacao = new JLabel("Bem-vindo, ADM: " + SessaoUsuario.getUsuarioLogado().getNome());
-        saudacao.setBounds(60, 20, 380, 30);
-        saudacao.setFont(saudacao.getFont().deriveFont(16f));
-        add(saudacao);
+        saudacao.setFont(EstiloSolarDragons.TITULO);
+        saudacao.setForeground(EstiloSolarDragons.AZUL_ESCURO);
+        c.gridy = 1;
+        add(saudacao, c);
+
+        JPanel painelBotoes = new JPanel(new GridLayout(7, 1, 0, 20));
+        EstiloSolarDragons.aplicarFundo(painelBotoes);
 
         JButton botaoUsuarios = new JButton("Gerenciar Usuários");
-        botaoUsuarios.setBounds(140, 70, 200, 35);
-        add(botaoUsuarios);
-
         JButton botaoClientes = new JButton("Gerenciar Clientes");
-        botaoClientes.setBounds(140, 120, 200, 35);
-        add(botaoClientes);
-
         JButton botaoSimulacoes = new JButton("Gerenciar Simulações");
-        botaoSimulacoes.setBounds(140, 170, 200, 35);
-        add(botaoSimulacoes);
-
         JButton botaoParametros = new JButton("Parâmetros do Sistema");
-        botaoParametros.setBounds(140, 220, 200, 35);
-        add(botaoParametros);
-
         JButton botaoExportar = new JButton("Exportar Relatórios");
-        botaoExportar.setBounds(140, 270, 200, 35);
-        add(botaoExportar);
-
         JButton botaoEstatisticas = new JButton("Ver Estatísticas Globais");
-        botaoEstatisticas.setBounds(140, 320, 200, 35);
-        add(botaoEstatisticas);
-
         JButton botaoSair = new JButton("Sair");
-        botaoSair.setBounds(140, 370, 200, 35);
-        add(botaoSair);
+
+        EstiloSolarDragons.estilizarBotaoPrincipal(botaoUsuarios);
+        EstiloSolarDragons.estilizarBotaoSecundario(botaoClientes);
+        EstiloSolarDragons.estilizarBotaoSecundario(botaoSimulacoes);
+        EstiloSolarDragons.estilizarBotaoSecundario(botaoParametros);
+        EstiloSolarDragons.estilizarBotaoSecundario(botaoExportar);
+        EstiloSolarDragons.estilizarBotaoSecundario(botaoEstatisticas);
+        EstiloSolarDragons.estilizarBotaoSecundario(botaoSair);
+
+        Dimension btnSize = new Dimension(240, 40);
+        botaoUsuarios.setPreferredSize(btnSize);
+        botaoClientes.setPreferredSize(btnSize);
+        botaoSimulacoes.setPreferredSize(btnSize);
+        botaoParametros.setPreferredSize(btnSize);
+        botaoExportar.setPreferredSize(btnSize);
+        botaoEstatisticas.setPreferredSize(btnSize);
+        botaoSair.setPreferredSize(btnSize);
+
+        painelBotoes.add(botaoUsuarios);
+        painelBotoes.add(botaoClientes);
+        painelBotoes.add(botaoSimulacoes);
+        painelBotoes.add(botaoParametros);
+        painelBotoes.add(botaoExportar);
+        painelBotoes.add(botaoEstatisticas);
+        painelBotoes.add(botaoSair);
+
+        c.gridy = 2; c.insets = new Insets(32,0,0,0);
+        add(painelBotoes, c);
 
         botaoUsuarios.addActionListener(e -> {
             dispose();

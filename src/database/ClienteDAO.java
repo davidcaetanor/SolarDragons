@@ -8,52 +8,7 @@ import java.util.List;
 
 public class ClienteDAO {
 
-
-    public boolean emailExisteParaUsuario(String email, String cpfUsuario) {
-        String sql = "SELECT COUNT(*) FROM cliente WHERE email = ? AND cpf_usuario = ?";
-        try (Connection conn = ConexaoMySQL.getConexao();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setString(1, email);
-            stmt.setString(2, cpfUsuario);
-            ResultSet rs = stmt.executeQuery();
-            if (rs.next()) {
-                return rs.getInt(1) > 0;
-            }
-        } catch (SQLException e) {
-            System.out.println("Erro ao verificar email: " + e.getMessage());
-        }
-        return false;
-    }
-
-
-    public boolean cpfExisteParaUsuario(String cpf, String cpfUsuario) {
-        String sql = "SELECT COUNT(*) FROM cliente WHERE cpf = ? AND cpf_usuario = ?";
-        try (Connection conn = ConexaoMySQL.getConexao();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setString(1, cpf);
-            stmt.setString(2, cpfUsuario);
-            ResultSet rs = stmt.executeQuery();
-            if (rs.next()) {
-                return rs.getInt(1) > 0;
-            }
-        } catch (SQLException e) {
-            System.out.println("Erro ao verificar cpf: " + e.getMessage());
-        }
-        return false;
-    }
-
-
     public boolean cadastrar(Cliente c, String cpfUsuario) {
-
-        if (cpfExisteParaUsuario(c.getCpf(), cpfUsuario)) {
-            System.out.println("CPF já cadastrado para este usuário.");
-            return false;
-        }
-        if (emailExisteParaUsuario(c.getEmail(), cpfUsuario)) {
-            System.out.println("Email já cadastrado para este usuário.");
-            return false;
-        }
-
         String sql = "INSERT INTO cliente (nome, email, cpf, logradouro, numero, bairro, cidade, estado, cep, cpf_usuario) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try (Connection conn = ConexaoMySQL.getConexao();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -69,46 +24,14 @@ public class ClienteDAO {
             stmt.setString(10, cpfUsuario);
             stmt.executeUpdate();
             return true;
-        } catch (SQLException e) {
-            System.out.println("Erro ao cadastrar cliente: " + e.getMessage());
+        } catch (Exception ex) {
+            ex.printStackTrace();
             return false;
         }
     }
 
-    public List<Cliente> listarPorUsuario(String cpfUsuario) {
-        List<Cliente> lista = new ArrayList<>();
-        String sql = "SELECT * FROM cliente WHERE cpf_usuario = ?";
-        try (Connection conn = ConexaoMySQL.getConexao();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setString(1, cpfUsuario);
-            ResultSet rs = stmt.executeQuery();
-            while (rs.next()) {
-                lista.add(construirCliente(rs));
-            }
-        } catch (SQLException e) {
-            System.out.println("Erro ao listar clientes: " + e.getMessage());
-        }
-        return lista;
-    }
-
-    public Cliente buscarPorCpfCliente(String cpfUsuario, String cpfCliente) {
-        String sql = "SELECT * FROM cliente WHERE cpf_usuario = ? AND cpf = ?";
-        try (Connection conn = ConexaoMySQL.getConexao();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setString(1, cpfUsuario);
-            stmt.setString(2, cpfCliente);
-            ResultSet rs = stmt.executeQuery();
-            if (rs.next()) {
-                return construirCliente(rs);
-            }
-        } catch (SQLException e) {
-            System.out.println("Erro ao buscar cliente: " + e.getMessage());
-        }
-        return null;
-    }
-
     public boolean atualizar(Cliente c, String cpfUsuario) {
-        String sql = "UPDATE cliente SET nome=?, email=?, logradouro=?, numero=?, bairro=?, cidade=?, estado=?, cep=? WHERE cpf_usuario=? AND cpf=?";
+        String sql = "UPDATE cliente SET nome=?, email=?, logradouro=?, numero=?, bairro=?, cidade=?, estado=?, cep=? WHERE cpf=? AND cpf_usuario=?";
         try (Connection conn = ConexaoMySQL.getConexao();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, c.getNome());
@@ -119,40 +42,136 @@ public class ClienteDAO {
             stmt.setString(6, c.getCidade());
             stmt.setString(7, c.getEstado());
             stmt.setString(8, c.getCep());
-            stmt.setString(9, cpfUsuario);
-            stmt.setString(10, c.getCpf());
-            stmt.executeUpdate();
-            return true;
-        } catch (SQLException e) {
-            System.out.println("Erro ao atualizar cliente: " + e.getMessage());
+            stmt.setString(9, c.getCpf());
+            stmt.setString(10, cpfUsuario);
+            int updated = stmt.executeUpdate();
+            return updated > 0;
+        } catch (Exception ex) {
+            ex.printStackTrace();
             return false;
         }
     }
 
     public boolean remover(String cpfUsuario, String cpfCliente) {
-        String sql = "DELETE FROM cliente WHERE cpf_usuario=? AND cpf=?";
+        String sql = "DELETE FROM cliente WHERE cpf = ? AND cpf_usuario = ?";
         try (Connection conn = ConexaoMySQL.getConexao();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setString(1, cpfUsuario);
-            stmt.setString(2, cpfCliente);
-            stmt.executeUpdate();
-            return true;
-        } catch (SQLException e) {
-            System.out.println("Erro ao remover cliente: " + e.getMessage());
+            stmt.setString(1, cpfCliente);
+            stmt.setString(2, cpfUsuario);
+            int deleted = stmt.executeUpdate();
+            return deleted > 0;
+        } catch (Exception ex) {
+            ex.printStackTrace();
             return false;
         }
     }
 
-    private Cliente construirCliente(ResultSet rs) throws SQLException {
-        Cliente c = new Cliente(rs.getString("cpf"), rs.getString("nome"));
-        c.setEmail(rs.getString("email"));
-        c.setLogradouro(rs.getString("logradouro"));
-        c.setNumero(rs.getString("numero"));
-        c.setBairro(rs.getString("bairro"));
-        c.setCidade(rs.getString("cidade"));
-        c.setEstado(rs.getString("estado"));
-        c.setCep(rs.getString("cep"));
-        c.setId(rs.getInt("id"));
-        return c;
+    public Cliente buscarPorCpfCliente(String cpfUsuario, String cpfCliente) {
+        String sql = "SELECT * FROM cliente WHERE cpf = ? AND cpf_usuario = ?";
+        try (Connection conn = ConexaoMySQL.getConexao();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, cpfCliente);
+            stmt.setString(2, cpfUsuario);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    Cliente c = new Cliente(rs.getString("cpf"), rs.getString("nome"));
+                    c.setId(rs.getInt("id"));
+                    c.setEmail(rs.getString("email"));
+                    c.setLogradouro(rs.getString("logradouro"));
+                    c.setNumero(rs.getString("numero"));
+                    c.setBairro(rs.getString("bairro"));
+                    c.setCidade(rs.getString("cidade"));
+                    c.setEstado(rs.getString("estado"));
+                    c.setCep(rs.getString("cep"));
+                    c.setCpfUsuario(rs.getString("cpf_usuario"));
+                    return c;
+                }
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return null;
+    }
+
+    public List<Cliente> listarPorUsuario(String cpfUsuario) {
+        List<Cliente> clientes = new ArrayList<>();
+        String sql = "SELECT * FROM cliente WHERE cpf_usuario = ?";
+        try (Connection conn = ConexaoMySQL.getConexao();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, cpfUsuario);
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    Cliente c = new Cliente(rs.getString("cpf"), rs.getString("nome"));
+                    c.setId(rs.getInt("id"));
+                    c.setEmail(rs.getString("email"));
+                    c.setLogradouro(rs.getString("logradouro"));
+                    c.setNumero(rs.getString("numero"));
+                    c.setBairro(rs.getString("bairro"));
+                    c.setCidade(rs.getString("cidade"));
+                    c.setEstado(rs.getString("estado"));
+                    c.setCep(rs.getString("cep"));
+                    c.setCpfUsuario(rs.getString("cpf_usuario"));
+                    clientes.add(c);
+                }
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return clientes;
+    }
+
+    public boolean emailExisteParaUsuario(String email, String cpfUsuario) {
+        String sql = "SELECT id FROM cliente WHERE email = ? AND cpf_usuario = ?";
+        try (Connection conn = ConexaoMySQL.getConexao();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, email);
+            stmt.setString(2, cpfUsuario);
+            try (ResultSet rs = stmt.executeQuery()) {
+                return rs.next();
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean cpfExisteParaUsuario(String cpfCliente, String cpfUsuario) {
+        String sql = "SELECT id FROM cliente WHERE cpf = ? AND cpf_usuario = ?";
+        try (Connection conn = ConexaoMySQL.getConexao();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, cpfCliente);
+            stmt.setString(2, cpfUsuario);
+            try (ResultSet rs = stmt.executeQuery()) {
+                return rs.next();
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return false;
+        }
+    }
+
+    public List<Cliente> listarTodos() {
+        List<Cliente> clientes = new ArrayList<>();
+        String sql = "SELECT * FROM cliente";
+        try (Connection conn = ConexaoMySQL.getConexao();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+            while (rs.next()) {
+                Cliente c = new Cliente(rs.getString("cpf"), rs.getString("nome"));
+                c.setId(rs.getInt("id"));
+                c.setEmail(rs.getString("email"));
+                c.setLogradouro(rs.getString("logradouro"));
+                c.setNumero(rs.getString("numero"));
+                c.setBairro(rs.getString("bairro"));
+                c.setCidade(rs.getString("cidade"));
+                c.setEstado(rs.getString("estado"));
+                c.setCep(rs.getString("cep"));
+                c.setCpfUsuario(rs.getString("cpf_usuario"));
+                clientes.add(c);
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return clientes;
     }
 }

@@ -7,45 +7,80 @@ import database.SimulacaoEnergiaDAO;
 import service.SessaoUsuario;
 
 import javax.swing.*;
+import java.awt.*;
 import java.util.List;
 
 public class TelaSimulacaoEconomia extends JFrame {
 
     private JTextField campoConta;
-    private JButton botaoSimular;
-    private JButton botaoVoltar;
-    private JTextArea areaResultado;
+    private JButton botaoSimular, botaoVoltar;
+    private JPanel cardResultado;
+    private JLabel lblConsumo, lblPotencia, lblModulos, lblArea, lblCusto, lblEconomia, lblPayback;
+    private JLabel logoLabel;
+    private ImageIcon logoGrande, logoPequeno;
 
     public TelaSimulacaoEconomia() {
         setTitle("Simulação de Economia");
-        setSize(450, 420);
+        setMinimumSize(new Dimension(700, 750));
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
-        setLayout(null);
+        setLayout(new GridBagLayout());
+        EstiloSolarDragons.aplicarFundo(getContentPane());
 
+        GridBagConstraints c = new GridBagConstraints();
+        c.insets = new Insets(12,12,12,12);
+        c.gridx = 0; c.gridwidth = 2;
+
+
+        logoGrande = EstiloSolarDragons.getIcon(200, 200, "C:\\Users\\david\\IdeaProjects\\SolarDragons\\src\\resources\\iconSolarDragons.png");
+        logoPequeno = EstiloSolarDragons.getIcon(90, 90, "C:\\Users\\david\\IdeaProjects\\SolarDragons\\src\\resources\\iconSolarDragons.png");
+        logoLabel = new JLabel(logoGrande);
+        c.gridy = 0; c.anchor = GridBagConstraints.CENTER;
+        add(logoLabel, c);
+
+        JLabel titulo = new JLabel("Simulação de Economia Solar");
+        titulo.setFont(EstiloSolarDragons.TITULO);
+        titulo.setForeground(EstiloSolarDragons.AZUL_ESCURO);
+        c.gridy = 1;
+        add(titulo, c);
+
+        c.gridy = 3; c.gridwidth = 1; c.anchor = GridBagConstraints.EAST;
         JLabel labelConta = new JLabel("Valor médio da conta (R$):");
-        labelConta.setBounds(40, 40, 180, 25);
-        add(labelConta);
+        EstiloSolarDragons.estilizarLabel(labelConta);
+        add(labelConta, c);
 
-        campoConta = new JTextField();
-        campoConta.setBounds(220, 40, 120, 25);
-        add(campoConta);
+        campoConta = new JTextField(16);
+        campoConta.setFont(new Font("Arial", Font.PLAIN, 16));
+        campoConta.setForeground(EstiloSolarDragons.AZUL_ESCURO);
+        campoConta.setBackground(EstiloSolarDragons.CINZA_CAMPO);
+        campoConta.setBorder(BorderFactory.createLineBorder(EstiloSolarDragons.AZUL_ESCURO, 2, true));
+        campoConta.setToolTipText("Ex: 350,00");
+        c.gridx = 1; c.anchor = GridBagConstraints.WEST;
+        add(campoConta, c);
+
+        JPanel painelBotoes = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 0));
+        EstiloSolarDragons.aplicarFundo(painelBotoes);
 
         botaoSimular = new JButton("Simular");
-        botaoSimular.setBounds(100, 90, 100, 30);
-        add(botaoSimular);
+        EstiloSolarDragons.estilizarBotaoPrincipal(botaoSimular);
 
         botaoVoltar = new JButton("Voltar");
-        botaoVoltar.setBounds(220, 90, 100, 30);
-        add(botaoVoltar);
+        EstiloSolarDragons.estilizarBotaoSecundario(botaoVoltar);
 
-        areaResultado = new JTextArea();
-        areaResultado.setBounds(40, 140, 360, 200);
-        areaResultado.setEditable(false);
-        areaResultado.setLineWrap(true);
-        areaResultado.setWrapStyleWord(true);
-        areaResultado.setBorder(BorderFactory.createTitledBorder("Resultados da Simulação"));
-        add(areaResultado);
+        Dimension botaoSize = new Dimension(130, 40);
+        botaoSimular.setPreferredSize(botaoSize);
+        botaoVoltar.setPreferredSize(botaoSize);
+
+        painelBotoes.add(botaoSimular);
+        painelBotoes.add(botaoVoltar);
+
+        c.gridx = 0; c.gridy = 5; c.gridwidth = 2; c.anchor = GridBagConstraints.CENTER;
+        add(painelBotoes, c);
+
+        cardResultado = criarPainelResultado();
+        cardResultado.setVisible(false);
+        c.gridy = 6; c.insets = new Insets(35,16,16,16);
+        add(cardResultado, c);
 
         botaoSimular.addActionListener(e -> simularEconomia());
         botaoVoltar.addActionListener(e -> {
@@ -54,6 +89,64 @@ public class TelaSimulacaoEconomia extends JFrame {
         });
 
         setVisible(true);
+    }
+
+    private JPanel criarPainelResultado() {
+        JPanel card = new JPanel();
+        card.setLayout(new GridBagLayout());
+        card.setBackground(Color.WHITE);
+        card.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(new Color(212, 197, 150), 2, true),
+                BorderFactory.createEmptyBorder(25, 30, 25, 30)
+        ));
+        card.setPreferredSize(new Dimension(500, 370));
+        card.setOpaque(true);
+
+        card.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createMatteBorder(0,0,8,0,new Color(232, 222, 177, 70)),
+                card.getBorder()
+        ));
+
+        GridBagConstraints resC = new GridBagConstraints();
+        resC.gridx = 0; resC.gridy = 0; resC.anchor = GridBagConstraints.WEST; resC.insets = new Insets(5, 2, 7, 2);
+
+        lblConsumo = new JLabel("Consumo estimado: --");
+        lblConsumo.setFont(new Font("Arial", Font.BOLD, 17));
+        card.add(lblConsumo, resC);
+
+        lblPotencia = new JLabel("Potência do sistema: --");
+        lblPotencia.setFont(new Font("Arial", Font.BOLD, 17));
+        resC.gridy++;
+        card.add(lblPotencia, resC);
+
+        lblModulos = new JLabel("Módulos solares: --");
+        lblModulos.setFont(new Font("Arial", Font.BOLD, 17));
+        resC.gridy++;
+        card.add(lblModulos, resC);
+
+        lblArea = new JLabel("Área necessária: --");
+        lblArea.setFont(new Font("Arial", Font.BOLD, 17));
+        resC.gridy++;
+        card.add(lblArea, resC);
+
+        lblCusto = new JLabel("Investimento: --");
+        lblCusto.setFont(new Font("Arial", Font.BOLD, 17));
+        resC.gridy++;
+        card.add(lblCusto, resC);
+
+        lblEconomia = new JLabel("Economia anual: --");
+        lblEconomia.setFont(new Font("Arial", Font.BOLD, 17));
+        lblEconomia.setForeground(new Color(44, 154, 76));
+        resC.gridy++;
+        card.add(lblEconomia, resC);
+
+        lblPayback = new JLabel("Payback: --");
+        lblPayback.setFont(new Font("Arial", Font.BOLD, 17));
+        lblPayback.setForeground(new Color(51, 102, 204));
+        resC.gridy++;
+        card.add(lblPayback, resC);
+
+        return card;
     }
 
     private void simularEconomia() {
@@ -111,24 +204,18 @@ public class TelaSimulacaoEconomia extends JFrame {
         SimulacaoEnergiaDAO simulacaoDAO = new SimulacaoEnergiaDAO();
         simulacaoDAO.cadastrar(simulacao, cliente.getId());
 
-        String resultado = String.format(
-                "Consumo estimado: %.2f kWh/mês\n" +
-                        "Potência do sistema necessária: %.2f kWp\n" +
-                        "Quantidade de módulos solares: %d\n" +
-                        "Área necessária para instalação: %.2f m²\n" +
-                        "Custo estimado do sistema: R$ %.2f\n" +
-                        "Economia anual estimada: R$ %.2f\n" +
-                        "Tempo estimado de retorno do investimento (payback): %s",
-                simulacao.getConsumoEstimadoKwh(),
-                simulacao.getPotenciaSistemaKw(),
-                simulacao.getQuantidadeModulos(),
-                simulacao.getAreaNecessariaM2(),
-                simulacao.getCustoSistema(),
-                simulacao.getEconomiaAnual(),
-                formatarPayback(simulacao.getPaybackAnos())
-        );
+        // Troca logo para versão menor ao exibir o resultado
+        logoLabel.setIcon(logoPequeno);
 
-        areaResultado.setText(resultado);
+        lblConsumo.setText("Consumo estimado: " + String.format("%.2f kWh/mês", simulacao.getConsumoEstimadoKwh()));
+        lblPotencia.setText("Potência do sistema: " + String.format("%.2f kWp", simulacao.getPotenciaSistemaKw()));
+        lblModulos.setText("Módulos solares: " + simulacao.getQuantidadeModulos());
+        lblArea.setText("Área necessária: " + String.format("%.2f m²", simulacao.getAreaNecessariaM2()));
+        lblCusto.setText("Investimento: R$ " + String.format("%.2f", simulacao.getCustoSistema()));
+        lblEconomia.setText("Economia anual: R$ " + String.format("%.2f", simulacao.getEconomiaAnual()));
+        lblPayback.setText("Payback: " + formatarPayback(simulacao.getPaybackAnos()));
+
+        cardResultado.setVisible(true);
     }
 
     private String formatarPayback(double anos) {

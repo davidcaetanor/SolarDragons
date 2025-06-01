@@ -2,7 +2,6 @@ package view;
 
 import model.Cliente;
 import database.ClienteDAO;
-import service.SessaoUsuario;
 import service.ViaCEP;
 import model.Endereco;
 
@@ -10,13 +9,14 @@ import javax.swing.*;
 import java.awt.*;
 
 public class TelaCadastroClienteEdicao extends JFrame {
-
     private JTextField campoNome, campoCpf, campoEmail, campoCep, campoLogradouro, campoNumero, campoBairro, campoCidade, campoEstado;
     private JButton botaoBuscarCep, botaoSalvar, botaoCancelar;
-    private String cpfCliente;
+    private final String cpfCliente;
+    private final String cpfUsuario;
 
-    public TelaCadastroClienteEdicao(String cpfCliente) {
+    public TelaCadastroClienteEdicao(String cpfCliente, String cpfUsuario, boolean isADM) {
         this.cpfCliente = cpfCliente;
+        this.cpfUsuario = cpfUsuario;
 
         setTitle("Editar Cliente");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -28,12 +28,10 @@ public class TelaCadastroClienteEdicao extends JFrame {
         setLayout(new GridBagLayout());
         GridBagConstraints c = new GridBagConstraints();
 
-
         JLabel logo = EstiloSolarDragons.criarLogo(160, 160, "C:\\Users\\david\\IdeaProjects\\SolarDragons\\src\\resources\\iconSolarDragons.png");
         c.gridx = 0; c.gridy = 0; c.gridwidth = 2;
         c.insets = new Insets(20, 0, 10, 0); c.anchor = GridBagConstraints.CENTER;
         add(logo, c);
-
 
         JLabel titulo = new JLabel("Editar Cliente");
         titulo.setFont(EstiloSolarDragons.TITULO);
@@ -45,8 +43,6 @@ public class TelaCadastroClienteEdicao extends JFrame {
         c.insets = new Insets(7, 35, 2, 10);
 
         int linha = 2;
-
-
         c.gridx = 0; c.gridy = linha;
         JLabel labelNome = new JLabel("Nome:");
         EstiloSolarDragons.estilizarLabel(labelNome);
@@ -56,7 +52,6 @@ public class TelaCadastroClienteEdicao extends JFrame {
         EstiloSolarDragons.estilizarCampo(campoNome);
         c.fill = GridBagConstraints.HORIZONTAL; c.weightx = 1.0;
         add(campoNome, c);
-
 
         c.gridx = 0; c.gridy = ++linha; c.fill = GridBagConstraints.NONE; c.weightx = 0;
         JLabel labelCpf = new JLabel("CPF do Cliente:");
@@ -69,7 +64,6 @@ public class TelaCadastroClienteEdicao extends JFrame {
         c.fill = GridBagConstraints.HORIZONTAL; c.weightx = 1.0;
         add(campoCpf, c);
 
-
         c.gridx = 0; c.gridy = ++linha; c.fill = GridBagConstraints.NONE; c.weightx = 0;
         JLabel labelEmail = new JLabel("E-mail:");
         EstiloSolarDragons.estilizarLabel(labelEmail);
@@ -79,7 +73,6 @@ public class TelaCadastroClienteEdicao extends JFrame {
         EstiloSolarDragons.estilizarCampo(campoEmail);
         c.fill = GridBagConstraints.HORIZONTAL; c.weightx = 1.0;
         add(campoEmail, c);
-
 
         c.gridx = 0; c.gridy = ++linha; c.fill = GridBagConstraints.NONE; c.weightx = 0;
         JLabel labelCep = new JLabel("CEP:");
@@ -100,7 +93,6 @@ public class TelaCadastroClienteEdicao extends JFrame {
         c.fill = GridBagConstraints.HORIZONTAL; c.weightx = 1.0;
         add(painelCep, c);
 
-
         c.gridx = 0; c.gridy = ++linha; c.fill = GridBagConstraints.NONE; c.weightx = 0;
         JLabel labelLogradouro = new JLabel("Logradouro:");
         EstiloSolarDragons.estilizarLabel(labelLogradouro);
@@ -110,7 +102,6 @@ public class TelaCadastroClienteEdicao extends JFrame {
         EstiloSolarDragons.estilizarCampo(campoLogradouro);
         c.fill = GridBagConstraints.HORIZONTAL; c.weightx = 1.0;
         add(campoLogradouro, c);
-
 
         c.gridx = 0; c.gridy = ++linha; c.fill = GridBagConstraints.NONE; c.weightx = 0;
         JLabel labelNumero = new JLabel("Número:");
@@ -122,7 +113,6 @@ public class TelaCadastroClienteEdicao extends JFrame {
         c.fill = GridBagConstraints.HORIZONTAL; c.weightx = 1.0;
         add(campoNumero, c);
 
-
         c.gridx = 0; c.gridy = ++linha; c.fill = GridBagConstraints.NONE; c.weightx = 0;
         JLabel labelBairro = new JLabel("Bairro:");
         EstiloSolarDragons.estilizarLabel(labelBairro);
@@ -132,7 +122,6 @@ public class TelaCadastroClienteEdicao extends JFrame {
         EstiloSolarDragons.estilizarCampo(campoBairro);
         c.fill = GridBagConstraints.HORIZONTAL; c.weightx = 1.0;
         add(campoBairro, c);
-
 
         c.gridx = 0; c.gridy = ++linha; c.fill = GridBagConstraints.NONE; c.weightx = 0;
         JLabel labelCidade = new JLabel("Cidade:");
@@ -178,7 +167,7 @@ public class TelaCadastroClienteEdicao extends JFrame {
         botaoSalvar.addActionListener(e -> salvarEdicao());
         botaoCancelar.addActionListener(e -> {
             dispose();
-            new TelaGerenciarClientes();
+            new TelaADMClientes();
         });
 
         carregarCliente();
@@ -186,10 +175,8 @@ public class TelaCadastroClienteEdicao extends JFrame {
     }
 
     private void carregarCliente() {
-        String cpfUsuario = SessaoUsuario.getUsuarioLogado().getCpf();
         ClienteDAO clienteDAO = new ClienteDAO();
         Cliente cliente = clienteDAO.buscarPorCpfCliente(cpfUsuario, cpfCliente);
-
         if (cliente != null) {
             campoNome.setText(cliente.getNome());
             campoCpf.setText(cliente.getCpf());
@@ -247,7 +234,6 @@ public class TelaCadastroClienteEdicao extends JFrame {
             JOptionPane.showMessageDialog(this, "Informe o estado com 2 letras (UF)", "Erro", JOptionPane.ERROR_MESSAGE);
             return;
         }
-        String cpfUsuario = SessaoUsuario.getUsuarioLogado().getCpf();
 
         ClienteDAO clienteDAO = new ClienteDAO();
         Cliente clienteExistente = clienteDAO.buscarPorCpfCliente(cpfUsuario, cpfCliente);
@@ -256,9 +242,8 @@ public class TelaCadastroClienteEdicao extends JFrame {
             return;
         }
 
-
         if (!email.equals(clienteExistente.getEmail()) && clienteDAO.emailExisteParaUsuario(email, cpfUsuario)) {
-            JOptionPane.showMessageDialog(this, "Já existe um cliente com este e-mail cadastrado para o seu usuário.", "Erro", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Já existe um cliente com este e-mail cadastrado para o usuário.", "Erro", JOptionPane.ERROR_MESSAGE);
             return;
         }
 
@@ -276,7 +261,7 @@ public class TelaCadastroClienteEdicao extends JFrame {
         if (atualizado) {
             JOptionPane.showMessageDialog(this, "Cliente atualizado com sucesso!");
             dispose();
-            new TelaGerenciarClientes();
+            new TelaADMClientes();
         } else {
             JOptionPane.showMessageDialog(this, "Erro ao atualizar cliente!", "Erro", JOptionPane.ERROR_MESSAGE);
         }
