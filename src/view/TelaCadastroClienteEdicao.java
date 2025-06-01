@@ -166,8 +166,7 @@ public class TelaCadastroClienteEdicao extends JFrame {
         botaoBuscarCep.addActionListener(e -> buscarCep());
         botaoSalvar.addActionListener(e -> salvarEdicao());
         botaoCancelar.addActionListener(e -> {
-            dispose();
-            new TelaADMClientes();
+            TelaUtil.voltarParaPainelUsuario(this);
         });
 
         carregarCliente();
@@ -261,7 +260,7 @@ public class TelaCadastroClienteEdicao extends JFrame {
         if (atualizado) {
             JOptionPane.showMessageDialog(this, "Cliente atualizado com sucesso!");
             dispose();
-            new TelaADMClientes();
+            TelaUtil.voltarParaPainelUsuario(this);
         } else {
             JOptionPane.showMessageDialog(this, "Erro ao atualizar cliente!", "Erro", JOptionPane.ERROR_MESSAGE);
         }

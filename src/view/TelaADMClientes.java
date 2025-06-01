@@ -111,9 +111,9 @@ public class TelaADMClientes extends JFrame {
         botaoEditar.addActionListener(e -> editarCliente());
         botaoRemover.addActionListener(e -> removerCliente());
         botaoVoltar.addActionListener(e -> {
-            dispose();
-            new TelaADM();
+            TelaUtil.voltarParaPainelUsuario(this);
         });
+
 
         campoBusca.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
             public void insertUpdate(javax.swing.event.DocumentEvent e) { filtrarTabela(); }

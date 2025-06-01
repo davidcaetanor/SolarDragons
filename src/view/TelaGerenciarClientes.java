@@ -143,8 +143,7 @@ public class TelaGerenciarClientes extends JFrame {
         botaoEditar.addActionListener(e -> editarCliente());
         botaoExcluir.addActionListener(e -> excluirCliente());
         botaoVoltar.addActionListener(e -> {
-            dispose();
-            new TelaPrincipalUsuario();
+            TelaUtil.voltarParaPainelUsuario(this);
         });
 
         botaoBuscar.addActionListener(e -> filtrarTabela());

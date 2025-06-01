@@ -84,8 +84,7 @@ public class TelaSimulacaoEconomia extends JFrame {
 
         botaoSimular.addActionListener(e -> simularEconomia());
         botaoVoltar.addActionListener(e -> {
-            dispose();
-            new TelaPrincipalUsuario();
+            TelaUtil.voltarParaPainelUsuario(this);
         });
 
         setVisible(true);

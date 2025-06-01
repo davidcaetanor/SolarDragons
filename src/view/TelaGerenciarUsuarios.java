@@ -97,9 +97,9 @@ public class TelaGerenciarUsuarios extends JFrame {
         botaoPromover.addActionListener(e -> promoverOuDemitirADM());
         botaoRemover.addActionListener(e -> removerUsuario());
         botaoVoltar.addActionListener(e -> {
-            dispose();
-            new TelaADM();
+            TelaUtil.voltarParaPainelUsuario(this);
         });
+
 
         atualizarTabela();
         setVisible(true);

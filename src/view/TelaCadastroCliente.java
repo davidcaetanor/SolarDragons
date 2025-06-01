@@ -161,8 +161,7 @@ public class TelaCadastroCliente extends JFrame {
         botaoBuscarCep.addActionListener(e -> buscarCep());
         botaoSalvar.addActionListener(e -> salvarCliente());
         botaoCancelar.addActionListener(e -> {
-            dispose();
-            new TelaGerenciarClientes();
+            TelaUtil.voltarParaPainelUsuario(this);
         });
 
         setVisible(true);

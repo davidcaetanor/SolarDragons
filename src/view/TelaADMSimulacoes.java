@@ -83,8 +83,7 @@ public class TelaADMSimulacoes extends JFrame {
         add(painelBotoes, c);
 
         botaoVoltar.addActionListener(e -> {
-            dispose();
-            new TelaADM();
+            TelaUtil.voltarParaPainelUsuario(this);
         });
 
         atualizarTabela();
