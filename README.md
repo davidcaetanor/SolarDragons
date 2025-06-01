@@ -31,10 +31,10 @@ Simular a economia mensal e anual, calcular o tempo de retorno do investimento (
 ## Como usar
 
 1. Clone o repositório.
-2. Configure o banco MySQL usando o script em `database/solardragons.sql`.
-3. Ajuste as credenciais no arquivo `ConexaoMySQL.java`.
+2. Configure o banco MySQL usando o script em `database/solardragons.sql`
+3. Ajuste as credenciais no arquivo `ConexaoMySQL.java`
 4. Compile e execute o projeto na sua IDE
-5. Use a interface gráfica para cadastrar, simular e visualizar resultados.
+5. Use a interface gráfica para cadastrar, simular e visualizar resultados
 
 ## Requisitos
 - Java 21
