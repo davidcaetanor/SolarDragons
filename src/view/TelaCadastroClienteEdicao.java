@@ -20,7 +20,7 @@ public class TelaCadastroClienteEdicao extends JFrame {
 
         setTitle("Editar Cliente");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setMinimumSize(new Dimension(730, 730));
+        setMinimumSize(new Dimension(800, 800));
         setLocationRelativeTo(null);
         setResizable(true);
 

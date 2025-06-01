@@ -26,7 +26,7 @@ public class TelaGerenciarClientes extends JFrame {
 
     public TelaGerenciarClientes() {
         setTitle("Gerenciar Clientes - SolarDragons");
-        setMinimumSize(new Dimension(750, 700));
+        setMinimumSize(new Dimension(800, 800));
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
         setLayout(new BorderLayout());

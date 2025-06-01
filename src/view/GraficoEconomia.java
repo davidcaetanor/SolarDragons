@@ -17,9 +17,29 @@ import java.util.List;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class GraficoEconomia {
+public class GraficoEconomia extends JFrame {
 
-    public static void exibirGraficoEconomia() {
+    public GraficoEconomia() {
+        setTitle("Gráfico - Economia x Investimento (5 anos)");
+        setMinimumSize(new Dimension(1200, 1200));
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        setLocationRelativeTo(null);
+        setLayout(new GridBagLayout());
+        EstiloSolarDragons.aplicarFundo(getContentPane());
+
+        GridBagConstraints c = new GridBagConstraints();
+        c.insets = new Insets(12, 12, 12, 12);
+        c.gridx = 0;
+
+        JLabel logo = EstiloSolarDragons.criarLogo(120, 120, "C:\\Users\\david\\IdeaProjects\\SolarDragons\\src\\resources\\iconSolarDragons.png");
+        c.gridy = 0;
+        add(logo, c);
+
+        JLabel titulo = new JLabel("Energia Solar: Economia x Investimento (em 5 anos)");
+        titulo.setFont(EstiloSolarDragons.TITULO);
+        titulo.setForeground(EstiloSolarDragons.AZUL_ESCURO);
+        c.gridy = 1;
+        add(titulo, c);
 
         String cpfUsuario = SessaoUsuario.getUsuarioLogado().getCpf();
         ClienteDAO clienteDAO = new ClienteDAO();
@@ -27,27 +47,26 @@ public class GraficoEconomia {
 
         List<Cliente> clientes = clienteDAO.listarPorUsuario(cpfUsuario);
 
-
         List<Cliente> comSimulacao = clientes.stream()
-                .filter(c -> simulacaoDAO.buscarUltimaSimulacao(c.getId()) != null)
+                .filter(cliente -> simulacaoDAO.buscarUltimaSimulacao(cliente.getId()) != null)
                 .collect(Collectors.toList());
 
         if (comSimulacao.isEmpty()) {
-            JOptionPane.showMessageDialog(null, "Você precisa fazer ao menos uma simulação para visualizar o gráfico!", "Aviso", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Você precisa fazer ao menos uma simulação para visualizar o gráfico!", "Aviso", JOptionPane.WARNING_MESSAGE);
+            dispose();
             return;
         }
 
-
         List<String> nomesClientes = comSimulacao.stream()
-                .map(c -> c.getNome() + " (" + c.getCpf().substring(0, 3) + "...)")
+                .map(cli -> cli.getNome() + " (" + cli.getCpf().substring(0, 3) + "...)")
                 .collect(Collectors.toList());
 
         List<SimulacaoEnergia> simulacoes = comSimulacao.stream()
-                .map(c -> simulacaoDAO.buscarUltimaSimulacao(c.getId()))
+                .map(cli -> simulacaoDAO.buscarUltimaSimulacao(cli.getId()))
                 .collect(Collectors.toList());
 
         List<Double> economia5Anos = simulacoes.stream()
-                .map(s -> s.getEconomiaAnual() * 5)
+                .map(sim -> sim.getEconomiaAnual() * 5)
                 .collect(Collectors.toList());
 
         List<Double> investimentoInicial = simulacoes.stream()
@@ -55,13 +74,13 @@ public class GraficoEconomia {
                 .collect(Collectors.toList());
 
         List<String> paybacks = simulacoes.stream()
-                .map(s -> formatarPayback(s.getPaybackAnos()))
+                .map(sim -> formatarPayback(sim.getPaybackAnos()))
                 .collect(Collectors.toList());
 
         CategoryChart chart = new CategoryChartBuilder()
-                .width(950)
-                .height(620)
-                .title("Energia Solar: Economia x Investimento (em 5 anos)")
+                .width(850)
+                .height(480)
+                .title("")
                 .xAxisTitle("Clientes Simulados")
                 .yAxisTitle("Valor (R$)")
                 .build();
@@ -74,39 +93,55 @@ public class GraficoEconomia {
         styler.setStacked(false);
         styler.setPlotGridVerticalLinesVisible(false);
         styler.setPlotGridHorizontalLinesVisible(true);
-
         styler.setSeriesColors(new Color[]{
-                new Color(34, 139, 34),
+                new Color(44, 154, 76),
                 new Color(178, 34, 34)
         });
 
         chart.addSeries("Economia em 5 anos", nomesClientes, economia5Anos);
         chart.addSeries("Investimento Inicial", nomesClientes, investimentoInicial);
 
-        SwingUtilities.invokeLater(() -> {
-            JFrame frame = new JFrame("Gráfico - Economia x Investimento");
-            frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-            frame.setLayout(new BorderLayout());
+        JPanel painelGrafico = new JPanel(new BorderLayout());
+        painelGrafico.setPreferredSize(new Dimension(850, 480));
+        painelGrafico.setOpaque(false);
+        painelGrafico.add(new XChartPanel<>(chart), BorderLayout.CENTER);
 
-            JPanel painelChart = new XChartPanel<>(chart);
-            frame.add(painelChart, BorderLayout.CENTER);
+        c.gridy = 2;
+        add(painelGrafico, c);
 
-            JTextArea texto = new JTextArea();
-            texto.setEditable(false);
-            texto.setBackground(new Color(242, 242, 242));
-            texto.setText(
-                    "Investir em energia solar pode ser mais acessível do que você imagina!\n" +
-                            "Veja como, em apenas alguns anos, sua economia supera o valor investido.\n\n" +
-                            "Payback dos clientes simulados:\n" +
-                            paybacksMensagem(comSimulacao, paybacks)
-            );
-            texto.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
-            frame.add(texto, BorderLayout.SOUTH);
+        JTextArea texto = new JTextArea();
+        texto.setEditable(false);
+        texto.setFont(new Font("Arial", Font.PLAIN, 16));
+        texto.setBackground(new Color(246, 242, 230));
+        texto.setForeground(EstiloSolarDragons.AZUL_ESCURO);
+        texto.setText(
+                "Investir em energia solar é garantir anos de economia.\n" +
+                "Em 5 anos, o valor economizado costuma superar o investimento inicial. Veja o tempo de retorno de cada simulação:\n\n" +
+                paybacksMensagem(comSimulacao, paybacks)
+        );
 
-            frame.pack();
-            frame.setLocationRelativeTo(null);
-            frame.setVisible(true);
-        });
+        texto.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(new Color(212, 197, 150), 1, true),
+                BorderFactory.createEmptyBorder(8, 16, 8, 16)
+        ));
+
+        c.gridy = 3;
+        add(texto, c);
+
+        JPanel painelBotoes = new JPanel();
+        EstiloSolarDragons.aplicarFundo(painelBotoes);
+
+        JButton botaoFechar = new JButton("Fechar");
+        EstiloSolarDragons.estilizarBotaoPrincipal(botaoFechar);
+        botaoFechar.setPreferredSize(new Dimension(160, 36));
+        painelBotoes.add(botaoFechar);
+
+        botaoFechar.addActionListener(e -> dispose());
+
+        c.gridy = 4;
+        add(painelBotoes, c);
+
+        setVisible(true);
     }
 
     private static String formatarPayback(double anos) {

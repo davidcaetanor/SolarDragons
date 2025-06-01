@@ -15,9 +15,8 @@ public class TelaMeusDados extends JFrame {
 
     public TelaMeusDados(TelaPrincipalUsuario telaPrincipal) {
         this.telaPrincipal = telaPrincipal;
-
         setTitle("Meus Dados");
-        setMinimumSize(new Dimension(750, 700));
+        setMinimumSize(new Dimension(800, 800));
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
         setResizable(true);

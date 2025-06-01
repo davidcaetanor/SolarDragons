@@ -21,7 +21,7 @@ public class TelaSimulacaoEconomia extends JFrame {
 
     public TelaSimulacaoEconomia() {
         setTitle("Simulação de Economia");
-        setMinimumSize(new Dimension(700, 750));
+        setMinimumSize(new Dimension(800, 800));
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
         setLayout(new GridBagLayout());

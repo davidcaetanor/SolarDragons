@@ -15,7 +15,7 @@ public class TelaCadastroUsuario extends JFrame {
 
     public TelaCadastroUsuario() {
         setTitle("Cadastro de Usuário - SolarDragons");
-        setMinimumSize(new Dimension(450, 800));
+        setMinimumSize(new Dimension(800, 800));
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
         setResizable(true);

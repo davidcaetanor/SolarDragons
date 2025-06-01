@@ -21,7 +21,7 @@ public class TelaADMClientes extends JFrame {
 
     public TelaADMClientes() {
         setTitle("Clientes do Sistema");
-        setMinimumSize(new Dimension(900, 700));
+        setMinimumSize(new Dimension(850, 800));
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
         setResizable(true);

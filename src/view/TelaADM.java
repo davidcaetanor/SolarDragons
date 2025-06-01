@@ -8,7 +8,7 @@ public class TelaADM extends JFrame {
 
     public TelaADM() {
         setTitle("Painel Administrativo - SolarDragons");
-        setMinimumSize(new Dimension(760, 810));
+        setMinimumSize(new Dimension(800, 800));
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setResizable(true);
@@ -93,7 +93,7 @@ public class TelaADM extends JFrame {
         });
 
         botaoEstatisticas.addActionListener(e -> {
-            new TelaEstatisticasGlobais();
+            new TelaEstatisticasGerais();
         });
 
         botaoSair.addActionListener(e -> {

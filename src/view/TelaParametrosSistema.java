@@ -1,8 +1,8 @@
 package view;
 
 import service.ParametrosSistema;
-
 import javax.swing.*;
+import java.awt.*;
 
 public class TelaParametrosSistema extends JFrame {
 
@@ -10,43 +10,78 @@ public class TelaParametrosSistema extends JFrame {
     private JButton botaoSalvar, botaoCancelar;
 
     public TelaParametrosSistema() {
-        setTitle("Parâmetros do Sistema");
-        setSize(400, 300);
+        setTitle("Parâmetros do Sistema - SolarDragons");
+        setMinimumSize(new Dimension(700, 700));
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
-        setLayout(null);
+        setResizable(true);
+
+        setLayout(new GridBagLayout());
+        EstiloSolarDragons.aplicarFundo(getContentPane());
+        GridBagConstraints c = new GridBagConstraints();
+
+        JLabel logo = EstiloSolarDragons.criarLogo(
+                180, 180, "C:\\Users\\david\\IdeaProjects\\SolarDragons\\src\\resources\\iconSolarDragons.png");
+        c.gridx = 0; c.gridy = 0; c.gridwidth = 2; c.insets = new Insets(24, 0, 10, 0);
+        add(logo, c);
+
+        JLabel titulo = new JLabel("Parâmetros do Sistema");
+        titulo.setFont(EstiloSolarDragons.TITULO);
+        titulo.setForeground(EstiloSolarDragons.AZUL_ESCURO);
+        c.gridy = 1; c.insets = new Insets(0, 0, 32, 0);
+        add(titulo, c);
+
+        c.gridwidth = 1;
+        c.insets = new Insets(12, 48, 8, 14); c.anchor = GridBagConstraints.WEST;
 
         JLabel labelCustoKw = new JLabel("Custo por kW (R$):");
-        labelCustoKw.setBounds(30, 30, 150, 25);
-        add(labelCustoKw);
+        EstiloSolarDragons.estilizarLabel(labelCustoKw);
+        c.gridx = 0; c.gridy = 2;
+        add(labelCustoKw, c);
 
-        campoCustoKw = new JTextField(String.valueOf(ParametrosSistema.getCustoPorKw()));
-        campoCustoKw.setBounds(200, 30, 120, 25);
-        add(campoCustoKw);
+        campoCustoKw = new JTextField(String.valueOf(ParametrosSistema.getCustoPorKw()), 12);
+        EstiloSolarDragons.estilizarCampo(campoCustoKw);
+        c.gridx = 1;
+        add(campoCustoKw, c);
 
         JLabel labelFator = new JLabel("Fator Economia:");
-        labelFator.setBounds(30, 70, 150, 25);
-        add(labelFator);
+        EstiloSolarDragons.estilizarLabel(labelFator);
+        c.gridx = 0; c.gridy = 3;
+        add(labelFator, c);
 
-        campoFator = new JTextField(String.valueOf(ParametrosSistema.getFatorEconomia()));
-        campoFator.setBounds(200, 70, 120, 25);
-        add(campoFator);
+        campoFator = new JTextField(String.valueOf(ParametrosSistema.getFatorEconomia()), 12);
+        EstiloSolarDragons.estilizarCampo(campoFator);
+        c.gridx = 1;
+        add(campoFator, c);
 
         JLabel labelPercentual = new JLabel("Percentual Geração:");
-        labelPercentual.setBounds(30, 110, 150, 25);
-        add(labelPercentual);
+        EstiloSolarDragons.estilizarLabel(labelPercentual);
+        c.gridx = 0; c.gridy = 4;
+        add(labelPercentual, c);
 
-        campoPercentual = new JTextField(String.valueOf(ParametrosSistema.getPercentualGeracao()));
-        campoPercentual.setBounds(200, 110, 120, 25);
-        add(campoPercentual);
+        campoPercentual = new JTextField(String.valueOf(ParametrosSistema.getPercentualGeracao()), 12);
+        EstiloSolarDragons.estilizarCampo(campoPercentual);
+        c.gridx = 1;
+        add(campoPercentual, c);
+
+        JPanel painelBotoes = new JPanel(new FlowLayout(FlowLayout.CENTER, 30, 18));
+        painelBotoes.setOpaque(false);
 
         botaoSalvar = new JButton("Salvar");
-        botaoSalvar.setBounds(80, 170, 100, 35);
-        add(botaoSalvar);
+        EstiloSolarDragons.estilizarBotaoPrincipal(botaoSalvar);
 
         botaoCancelar = new JButton("Cancelar");
-        botaoCancelar.setBounds(200, 170, 100, 35);
-        add(botaoCancelar);
+        EstiloSolarDragons.estilizarBotaoSecundario(botaoCancelar);
+
+        Dimension btnSize = new Dimension(140, 38);
+        botaoSalvar.setPreferredSize(btnSize);
+        botaoCancelar.setPreferredSize(btnSize);
+
+        painelBotoes.add(botaoSalvar);
+        painelBotoes.add(botaoCancelar);
+
+        c.gridx = 0; c.gridy = 5; c.gridwidth = 2; c.insets = new Insets(40, 0, 8, 0);
+        add(painelBotoes, c);
 
         botaoSalvar.addActionListener(e -> salvarParametros());
         botaoCancelar.addActionListener(e -> dispose());

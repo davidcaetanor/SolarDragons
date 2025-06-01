@@ -6,6 +6,9 @@ import service.SessaoUsuario;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.JTableHeader;
+import javax.swing.table.DefaultTableCellRenderer;
+import java.awt.*;
 import java.util.List;
 
 public class TelaGerenciarUsuarios extends JFrame {
@@ -15,37 +18,81 @@ public class TelaGerenciarUsuarios extends JFrame {
 
     public TelaGerenciarUsuarios() {
         setTitle("Gerenciar Usuários");
-        setSize(700, 350);
+        setMinimumSize(new Dimension(830, 800));
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
-        setLayout(null);
+        setResizable(true);
+
+        setLayout(new GridBagLayout());
+        EstiloSolarDragons.aplicarFundo(getContentPane());
+        GridBagConstraints c = new GridBagConstraints();
+        c.gridx = 0; c.gridwidth = 2; c.insets = new Insets(24, 0, 10, 0);
+
+        JLabel logo = EstiloSolarDragons.criarLogo(180, 180, "C:\\Users\\david\\IdeaProjects\\SolarDragons\\src\\resources\\iconSolarDragons.png");
+        c.gridy = 0;
+        add(logo, c);
+
+        JLabel titulo = new JLabel("Gerenciar Usuários");
+        titulo.setFont(EstiloSolarDragons.TITULO);
+        titulo.setForeground(EstiloSolarDragons.AZUL_ESCURO);
+        c.gridy = 1;
+        add(titulo, c);
 
         admRoot = SessaoUsuario.getUsuarioLogado().isRootAdmin();
-
-        JLabel label = new JLabel("Usuários do sistema:");
-        label.setBounds(20, 15, 200, 25);
-        add(label);
 
         String[] colunas = {"Nome", "CPF", "Email", "Tipo", "ADM Raiz"};
         tableModel = new DefaultTableModel(colunas, 0) {
             public boolean isCellEditable(int row, int column) { return false; }
         };
         tabelaUsuarios = new JTable(tableModel);
+        tabelaUsuarios.setRowHeight(30);
+
+        JTableHeader header = tabelaUsuarios.getTableHeader();
+        header.setBackground(EstiloSolarDragons.AZUL_ESCURO);
+        header.setForeground(Color.WHITE);
+        header.setFont(new Font("Arial", Font.BOLD, 14));
+
+        tabelaUsuarios.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
+            @Override
+            public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+                Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+                if (!isSelected) {
+                    c.setBackground(row % 2 == 0 ? Color.WHITE : new Color(245, 245, 245));
+                } else {
+                    c.setBackground(new Color(220, 230, 245));
+                }
+                c.setForeground(EstiloSolarDragons.AZUL_ESCURO);
+                return c;
+            }
+        });
+
         JScrollPane scrollPane = new JScrollPane(tabelaUsuarios);
-        scrollPane.setBounds(20, 45, 640, 180);
-        add(scrollPane);
+        scrollPane.setPreferredSize(new Dimension(700, 260));
+        c.gridy = 2; c.insets = new Insets(16, 0, 22, 0);
+        add(scrollPane, c);
+
+        JPanel painelBotoes = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 0));
+        EstiloSolarDragons.aplicarFundo(painelBotoes);
 
         JButton botaoPromover = new JButton("Promover/Demitir ADM");
-        botaoPromover.setBounds(20, 240, 170, 30);
-        add(botaoPromover);
-
         JButton botaoRemover = new JButton("Remover Usuário");
-        botaoRemover.setBounds(200, 240, 150, 30);
-        add(botaoRemover);
-
         JButton botaoVoltar = new JButton("Voltar");
-        botaoVoltar.setBounds(370, 240, 100, 30);
-        add(botaoVoltar);
+
+        EstiloSolarDragons.estilizarBotaoPrincipal(botaoPromover);
+        EstiloSolarDragons.estilizarBotaoSecundario(botaoRemover);
+        EstiloSolarDragons.estilizarBotaoSecundario(botaoVoltar);
+
+        Dimension btnSize = new Dimension(180, 38);
+        botaoPromover.setPreferredSize(btnSize);
+        botaoRemover.setPreferredSize(btnSize);
+        botaoVoltar.setPreferredSize(btnSize);
+
+        painelBotoes.add(botaoPromover);
+        painelBotoes.add(botaoRemover);
+        painelBotoes.add(botaoVoltar);
+
+        c.gridy = 3; c.insets = new Insets(10, 0, 10, 0);
+        add(painelBotoes, c);
 
         botaoPromover.addActionListener(e -> promoverOuDemitirADM());
         botaoRemover.addActionListener(e -> removerUsuario());
@@ -55,7 +102,6 @@ public class TelaGerenciarUsuarios extends JFrame {
         });
 
         atualizarTabela();
-
         setVisible(true);
     }
 
@@ -87,7 +133,6 @@ public class TelaGerenciarUsuarios extends JFrame {
             return;
         }
 
-        // Só o ADM raiz pode promover/demitir outros ADMs
         if (!admRoot && u.isAdmin()) {
             JOptionPane.showMessageDialog(this, "Apenas o ADM raiz pode alterar privilégios de outros ADMs.", "Acesso negado", JOptionPane.ERROR_MESSAGE);
             return;

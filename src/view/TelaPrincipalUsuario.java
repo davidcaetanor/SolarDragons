@@ -94,7 +94,7 @@ public class TelaPrincipalUsuario extends JFrame {
             new TelaGerenciarClientes();
         });
         botaoGrafico.addActionListener(e -> {
-            GraficoEconomia.exibirGraficoEconomia();
+            new GraficoEconomia();
         });
         botaoExportar.addActionListener(e -> {
             JOptionPane.showMessageDialog(this, "Função em desenvolvimento! Exportação será implementada em breve.", "Info", JOptionPane.INFORMATION_MESSAGE);
