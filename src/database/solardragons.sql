@@ -1,4 +1,3 @@
-DROP DATABASE IF EXISTS solardragons;
 CREATE DATABASE solardragons DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 USE solardragons;
 
@@ -6,7 +5,7 @@ CREATE TABLE usuario (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nome VARCHAR(100) NOT NULL,
     email VARCHAR(100) NOT NULL,
-    cpf CHAR(11) NOT NULL UNIQUE, -- 
+    cpf CHAR(11) NOT NULL UNIQUE,
     administrador BOOLEAN DEFAULT FALSE,
     raiz BOOLEAN DEFAULT FALSE,
     senha VARCHAR(100) NOT NULL
