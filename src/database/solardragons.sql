@@ -6,7 +6,7 @@ CREATE TABLE usuario (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nome VARCHAR(100) NOT NULL,
     email VARCHAR(100) NOT NULL,
-    cpf CHAR(11) NOT NULL UNIQUE, -- só números, padronizado!
+    cpf CHAR(11) NOT NULL UNIQUE, -- 
     administrador BOOLEAN DEFAULT FALSE,
     raiz BOOLEAN DEFAULT FALSE,
     senha VARCHAR(100) NOT NULL
