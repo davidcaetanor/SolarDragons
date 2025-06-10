@@ -1,4 +1,4 @@
-package Aplication;
+package Application;
 
 import view.TelaLogin;
 

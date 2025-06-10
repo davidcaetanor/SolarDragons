@@ -55,7 +55,7 @@ public class TelaPrincipalUsuario extends JFrame {
 
         JButton botaoExportar = new JButton("Exportar Relatório");
         EstiloSolarDragons.estilizarBotaoSecundario(botaoExportar);
-        painelBotoes.add(botaoExportar);
+        // painelBotoes.add(botaoExportar); desabilitado
 
         JButton botaoSair = new JButton("Sair");
         EstiloSolarDragons.estilizarBotaoPrincipal(botaoSair);

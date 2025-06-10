@@ -62,7 +62,7 @@ public class TelaADM extends JFrame {
         painelBotoes.add(botaoClientes);
         painelBotoes.add(botaoSimulacoes);
         painelBotoes.add(botaoParametros);
-        painelBotoes.add(botaoExportar);
+        //painelBotoes.add(botaoExportar); desabilitado
         painelBotoes.add(botaoEstatisticas);
         painelBotoes.add(botaoSair);
 

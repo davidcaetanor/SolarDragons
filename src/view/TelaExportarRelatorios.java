@@ -13,8 +13,8 @@ public class TelaExportarRelatorios extends JFrame {
 
         JLabel label = new JLabel("exporta relatorio");
         label.setBounds(60, 60, 300, 30);
-        add(label);
+        // add(label); Desabilitado
 
-        setVisible(true);
+        setVisible(false);
     }
 }
