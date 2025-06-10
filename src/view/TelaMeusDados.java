@@ -6,6 +6,7 @@ import model.Usuario;
 
 import javax.swing.*;
 import java.awt.*;
+import database.UsuarioDAO;
 
 public class TelaMeusDados extends JFrame {
     private JTextField campoNome, campoEmail, campoCpf;
@@ -149,11 +150,17 @@ public class TelaMeusDados extends JFrame {
 
         usuario.setNome(nome);
         usuario.setEmail(email);
-        JOptionPane.showMessageDialog(this, "Dados atualizados com sucesso!");
-        dispose();
+        UsuarioDAO usuarioDAO = new UsuarioDAO();
+        boolean atualizado = usuarioDAO.atualizar(usuario);
 
-        telaPrincipal.atualizarSaudacao();
-        telaPrincipal.setVisible(true);
+        if (atualizado) {
+            JOptionPane.showMessageDialog(this, "Dados atualizados com sucesso!");
+            telaPrincipal.atualizarSaudacao();
+            dispose();
+            telaPrincipal.setVisible(true);
+        } else {
+            JOptionPane.showMessageDialog(this, "Erro ao atualizar seus dados!", "Erro", JOptionPane.ERROR_MESSAGE);
+        }
     }
 
     private void cancelar() {
