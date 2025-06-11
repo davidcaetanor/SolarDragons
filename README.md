@@ -5,19 +5,24 @@ Professor: Túlio Cearamicoli Vivaldini
 
 ## Sobre
 
-SolarDragons é um sistema para simular a economia gerada pelo uso de energia solar em residências. 
-O usuário pode cadastrar clientes, inserir dados de consumo mensal e endereço. 
-Simular a economia mensal e anual, calcular o tempo de retorno do investimento (payback) e visualizar os resultados por meio de gráficos.
+SolarDragons é um sistema para simular a economia gerada pelo uso de energia solar em residências.
+Permite cadastrar usuários, controlar clientes e registrar as simulações de economia.
+O programa exibe a estimativa de retorno do investimento (payback) e apresenta gráficos de economia.
 
 ## Funcionalidades
 
-- Cadastro de cliente com nome, CPF e endereço completo (incluindo número)
-- Simulação de economia baseada em dados reais
-- Cálculo e exibição do payback
-- Geração de gráficos sobre economia (Estipulamos 5 anos)
-- Persistência dos dados no banco MySQL
+- Cadastro de usuários com CPF, nome, email e senha
+- Login por CPF e senha
+- Perfis de usuário e administrador
+- Gerenciamento de clientes com nome, CPF e endereço completo
+- Simulação de economia e cálculo do payback
+- Histórico de simulações armazenado em banco
+- Gráfico de economia x investimento (5 anos)
+- Ajuste de parâmetros do sistema (ADM)
+- Estatísticas gerais para administradores
 - Interface gráfica em Java Swing
-- Integração com ViaCEP para preenchimento de endereço por CEP
+- Integração com ViaCEP para preencher endereços
+- Persistência em MySQL
 
 ## Tecnologias
 
