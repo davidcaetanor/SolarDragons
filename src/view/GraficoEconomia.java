@@ -31,7 +31,7 @@ public class GraficoEconomia extends JFrame {
         c.insets = new Insets(12, 12, 12, 12);
         c.gridx = 0;
 
-        JLabel logo = EstiloSolarDragons.criarLogo(120, 120, "C:\\Users\\david\\IdeaProjects\\SolarDragons\\src\\resources\\iconSolarDragons.png");
+        JLabel logo = EstiloSolarDragons.criarLogo(120, 120, "/resources/iconSolarDragons.png");
         c.gridy = 0;
         add(logo, c);
 

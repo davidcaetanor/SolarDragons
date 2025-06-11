@@ -31,7 +31,7 @@ public class TelaADMClientes extends JFrame {
         GridBagConstraints c = new GridBagConstraints();
         c.insets = new Insets(18, 0, 12, 0); c.gridx = 0; c.gridwidth = 2;
 
-        JLabel logo = EstiloSolarDragons.criarLogo(140, 140, "C:\\Users\\david\\IdeaProjects\\SolarDragons\\src\\resources\\iconSolarDragons.png");
+        JLabel logo = EstiloSolarDragons.criarLogo(120, 120, "/resources/iconSolarDragons.png");
         c.gridy = 0; c.anchor = GridBagConstraints.CENTER;
         add(logo, c);
 

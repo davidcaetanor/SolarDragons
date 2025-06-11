@@ -32,8 +32,8 @@ public class TelaSimulacaoEconomia extends JFrame {
         c.gridx = 0; c.gridwidth = 2;
 
 
-        logoGrande = EstiloSolarDragons.getIcon(200, 200, "C:\\Users\\david\\IdeaProjects\\SolarDragons\\src\\resources\\iconSolarDragons.png");
-        logoPequeno = EstiloSolarDragons.getIcon(90, 90, "C:\\Users\\david\\IdeaProjects\\SolarDragons\\src\\resources\\iconSolarDragons.png");
+        logoGrande = EstiloSolarDragons.getIcon(200, 200, "/resources/iconSolarDragons.png");
+        logoPequeno = EstiloSolarDragons.getIcon(90, 90, "/resources/iconSolarDragons.png");
         logoLabel = new JLabel(logoGrande);
         c.gridy = 0; c.anchor = GridBagConstraints.CENTER;
         add(logoLabel, c);

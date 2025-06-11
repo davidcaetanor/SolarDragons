@@ -29,7 +29,7 @@ public class TelaADMSimulacoes extends JFrame {
 
         c.gridx = 0; c.gridy = 0; c.insets = new Insets(18, 0, 12, 0); c.gridwidth = 2;
         JLabel logo = EstiloSolarDragons.criarLogo(110, 110,
-                "C:\\Users\\david\\IdeaProjects\\SolarDragons\\src\\resources\\iconSolarDragons.png");
+                "/resources/iconSolarDragons.png");
         add(logo, c);
 
         c.gridy = 1;

@@ -28,7 +28,7 @@ public class TelaGerenciarUsuarios extends JFrame {
         GridBagConstraints c = new GridBagConstraints();
         c.gridx = 0; c.gridwidth = 2; c.insets = new Insets(24, 0, 10, 0);
 
-        JLabel logo = EstiloSolarDragons.criarLogo(180, 180, "C:\\Users\\david\\IdeaProjects\\SolarDragons\\src\\resources\\iconSolarDragons.png");
+        JLabel logo = EstiloSolarDragons.criarLogo(180, 180, "/resources/iconSolarDragons.png");
         c.gridy = 0;
         add(logo, c);
 

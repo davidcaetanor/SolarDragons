@@ -27,8 +27,7 @@ public class TelaMeusDados extends JFrame {
         EstiloSolarDragons.aplicarFundo(getContentPane());
 
 
-        JLabel logo = EstiloSolarDragons.criarLogo(
-                180, 180, "C:\\Users\\david\\IdeaProjects\\SolarDragons\\src\\resources\\iconSolarDragons.png");
+        JLabel logo = EstiloSolarDragons.criarLogo(180, 180, "/resources/iconSolarDragons.png");
         c.gridx = 0; c.gridy = 0; c.insets = new Insets(20,0,10,0);
         add(logo, c);
 

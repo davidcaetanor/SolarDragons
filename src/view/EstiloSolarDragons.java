@@ -54,7 +54,11 @@ public class EstiloSolarDragons {
 
     public static JLabel criarLogo(int largura, int altura, String caminho) {
         try {
-            ImageIcon icon = new ImageIcon(caminho);
+            java.net.URL url = EstiloSolarDragons.class.getResource(caminho);
+            if (url == null) {
+                return new JLabel("Logo");
+            }
+            ImageIcon icon = new ImageIcon(url);
             Image img = icon.getImage().getScaledInstance(largura, altura, Image.SCALE_SMOOTH);
             return new JLabel(new ImageIcon(img));
         } catch (Exception e) {
@@ -67,7 +71,11 @@ public class EstiloSolarDragons {
     }
     public static ImageIcon getIcon(int largura, int altura, String caminho) {
         try {
-            ImageIcon icon = new ImageIcon(caminho);
+            java.net.URL url = EstiloSolarDragons.class.getResource(caminho);
+            if (url == null) {
+                return new ImageIcon();
+            }
+            ImageIcon icon = new ImageIcon(url);
             Image img = icon.getImage().getScaledInstance(largura, altura, Image.SCALE_SMOOTH);
             return new ImageIcon(img);
         } catch (Exception e) {

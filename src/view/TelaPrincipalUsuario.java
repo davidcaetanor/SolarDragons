@@ -23,8 +23,7 @@ public class TelaPrincipalUsuario extends JFrame {
         EstiloSolarDragons.aplicarFundo(getContentPane());
 
 
-        JLabel logo = EstiloSolarDragons.criarLogo(
-                200, 200, "C:\\Users\\david\\IdeaProjects\\SolarDragons\\src\\resources\\iconSolarDragons.png");
+        JLabel logo = EstiloSolarDragons.criarLogo(200, 200, "/resources/iconSolarDragons.png");
         c.gridx = 0; c.gridy = 0; c.insets = new Insets(18,0,6,0);
         add(logo, c);
 

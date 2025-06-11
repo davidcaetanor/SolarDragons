@@ -19,8 +19,7 @@ public class TelaADM extends JFrame {
         c.gridx = 0; c.gridwidth = 1;
         c.insets = new Insets(14, 0, 14, 0);
 
-        JLabel logo = EstiloSolarDragons.criarLogo(
-                200, 200, "C:\\Users\\david\\IdeaProjects\\SolarDragons\\src\\resources\\iconSolarDragons.png");
+        JLabel logo = EstiloSolarDragons.criarLogo(120, 120, "/resources/iconSolarDragons.png");
         c.gridy = 0;
         add(logo, c);
 

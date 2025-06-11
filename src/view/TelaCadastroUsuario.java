@@ -24,8 +24,7 @@ public class TelaCadastroUsuario extends JFrame {
         GridBagConstraints c = new GridBagConstraints();
         EstiloSolarDragons.aplicarFundo(getContentPane());
 
-        JLabel logo = EstiloSolarDragons.criarLogo(
-                250, 250, "C:\\Users\\david\\IdeaProjects\\SolarDragons\\src\\resources\\iconSolarDragons.png");
+        JLabel logo = EstiloSolarDragons.criarLogo(250, 250, "/resources/iconSolarDragons.png");
         c.gridx = 0;
         c.gridy = 0;
         c.insets = new Insets(10, 0, 15, 0);

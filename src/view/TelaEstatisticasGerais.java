@@ -27,8 +27,7 @@ public class TelaEstatisticasGerais extends JFrame {
         c.insets = new Insets(16, 0, 12, 0);
         c.gridx = 0; c.gridwidth = 1;
 
-        JLabel logo = EstiloSolarDragons.criarLogo(
-                200, 200, "C:\\Users\\david\\IdeaProjects\\SolarDragons\\src\\resources\\iconSolarDragons.png");
+        JLabel logo = EstiloSolarDragons.criarLogo(200, 200, "/resources/iconSolarDragons.png");
         c.gridy = 0;
         add(logo, c);
 
@@ -53,7 +52,7 @@ public class TelaEstatisticasGerais extends JFrame {
             List<Cliente> clientes = clienteDAO.listarPorUsuario(usuario.getCpf());
             totalClientes += clientes.size();
             for (Cliente x : clientes) {
-                // Contabiliza estados válidos
+
                 if (x.getEstado() != null && !x.getEstado().trim().isEmpty()) {
                     estadosCadastrados.add(x.getEstado().trim().toUpperCase());
                 }
