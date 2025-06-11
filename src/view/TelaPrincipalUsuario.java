@@ -81,7 +81,7 @@ public class TelaPrincipalUsuario extends JFrame {
             boolean existeCliente = !clienteDAO.listarPorUsuario(cpf).isEmpty();
 
             if (!existeCliente) {
-                JOptionPane.showMessageDialog(this, "Você precisa cadastrar seus dados antes de simular!", "Atenção", JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Voce precisa cadastrar ao menos um cliente antes de simular!", "Atenção", JOptionPane.WARNING_MESSAGE);
                 dispose();
                 new TelaCadastroCliente();
             } else {
