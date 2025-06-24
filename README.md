@@ -9,6 +9,9 @@ SolarDragons é um sistema para simular a economia gerada pelo uso de energia so
 Permite cadastrar usuários, controlar clientes e registrar as simulações de economia.
 O programa exibe a estimativa de retorno do investimento (payback) e apresenta gráficos de economia.
 
+Assista ao vídeo do SolarDragons no YouTube: 
+[SolarDragons](https://www.youtube.com/watch?v=19WEmGTCWQs)
+
 ## Funcionalidades
 
 - Cadastro de usuários com CPF, nome, email e senha
